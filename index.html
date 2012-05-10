@@ -1,0 +1,12 @@
+---
+layout: default
+---
+{% for page in site.posts limit: 1 %}
+<section id="content">
+  <h2> {{ page.title }} </h2>
+  <section class="text">
+    {{ page.content }}
+    <h6>{{ page.date | date: "%d %b %Y" }}</h6>
+  </section>
+</section>
+{% endfor %}
