@@ -2,6 +2,7 @@
 layout: post
 title: Setting up Jekyll
 ---
+<h3>The What and Why</h3>
 For a while now I've been thinking of using **[Jekyll](https://github.com/mojombo/jekyll/wiki)** for my online work. Previously I'd only ever used **[Django](https://www.djangoproject.com/)** but it seemed like a bit of overkill for what I wanted to do here.
 
 There are numerous tutorials out there for starting out with Jekyll, and for those that already have a running blog and just want to migrate, **[this](http://paulstamatiou.com/how-to-wordpress-to-jekyll)** is an  excellent guide (based on a Wordpress - Jekyll migration).
@@ -17,6 +18,8 @@ So what are the benefits of using Jekyll instead of using a full-blown CMS for y
 3. Files are in text format - one of the biggest advantages to this is that you can write your new pages/entries with your favorite text editor instead of going through a web interface. I, for example, am using emacs to do all my writing.
 
 4. Static html - any half-decent webserver can serve 1000s of request / SECOND of static html files. If your website generates high traffic this becomes critical, websites that are generated on the fly on the other hand, can take up to 0.5 seconds to serve a single request. This is why a lot of blogs that are using PHP, Python, or any other language to create the requested pages on demand can all of a sudden have huge down times when they become popular; thousands or even just hundreds  of users requesting pages at the same time.
+
+<h3>The Back-end</h3>
 
 So what are the basic requirements?
 
@@ -50,7 +53,9 @@ The *_config.yml* file can actually be slightly complex, for now just put this i
 
 Here we're just telling Jekyll to use **rdiscount** as it's markdown implementation, that the base url is **`/`** (you will change this once you deploy the site, this is just for development), and that everytime you make a change to any of the files, the Jekyll server will rebuild the site automatically.
 
-To start, create a basic *default* template page, which will for the basis for future pages, and put it in the *_layouts* folder. Mine for example is:
+<h3>Creating the Site</h3>
+
+To start, create a basic *default* template page, which will for the basis for future pages, and put it in the **`_layouts`** folder. Mine for example is:
 
 <section class="code">
 {% highlight html %}
@@ -109,7 +114,9 @@ Hey there!
 
 The triple dash `---` should be at the beginning of the file, no newlines before or after. Everything between the dashes are **[YAML front matter](https://github.com/mojombo/jekyll/wiki/YAML-Front-Matter)**, basically information that Jekyll processes. In this particular example, we're telling Jekyll to use the default layout (the one you just wrote in the _layouts folder) and that the title is "Hey!". When Jekyll reads this, it will create an html file from your default layout and insert "Hey!" wherever there is a {% raw %}**`{{ page.title }}`** {% endraw %}tag.
 
-Everything after the triple dashes are content, so in the index file about to be created, Jekyll will place "Hey there!" in the section where we put {% raw %} **`{{content }}`** {% endraw %} in the layout file.
+Everything after the triple dashes are content, so in the index file about to be created, Jekyll will place "Hey there!" in the section where we put {% raw %} **`{{ content }}`** {% endraw %} in the layout file.
+
+<h3>Serving the Site Locally...</h3>
 
 Now run the Jekyll server and point your browser to **[http://localhost:4000](http://localhost:4000)**:
 
@@ -118,3 +125,25 @@ Now run the Jekyll server and point your browser to **[http://localhost:4000](ht
 </section>
 
 You should see a page based on your default template with the content you specified in your *index.html* file.
+
+<h3> ... and Serving the Site to the World!</h3>
+
+The simplest way of serving your Jekyll-powered site (or Jekyll-built site?) is to just copy the contents of the **`_site`** folder into the root directory of your webserver (on Linux/Unix boxes this is usually **`/var/www/`**). The contents of the **`_site`** folder are created everytime you run Jekyll in your project directory.
+
+<section class="shell">
+    $ jekyll
+    /usr/lib/ruby/1.9.1/rubygems/custom_require.rb:36:in `require': iconv will be deprecated in the future, use String#encode instead.
+    Configuration from /home/mo/dev/jekyll/mozartreina/_config.yml
+    Auto-regenerating enabled: /home/mo/dev/jekyll/mozartreina -> /home/mo/dev/jekyll/mozartreina/_site
+    [2012-05-10 18:14:07] regeneration: 16 files changed
+</section>
+
+A better way though would be to use [Github Pages](http://pages.github.com/), as this will allow you to update your website by just pushing your site to your repo.
+
+You will need to create a repository on [github](http://github.com) with the following structure: *`username`*`.github.com`. Once this is done, push the generated site contents (the files found in *`_site`*) there everytime you add an entry or make a change to your website.
+
+*My repo can be found [here](https://github.com/paradigmshift/paradigmshift.github.com), and you can view it at this address **[http://paradigmshift.github.com/](http://paradigmshift.github.com/)**.*
+
+Full deployment instructions can be found [here](https://github.com/mojombo/jekyll/wiki/Deployment).
+
+And this wraps up setting up Jekyll. If you have any questions or comments, please feel free to drop me a [line](/about/).
