@@ -8,7 +8,7 @@ I've been using the [Slime](http://common-lisp.net/project/slime/) developing en
 
 One aspect that I never delved into in any detail though was the debugger, after all, I had the mighty `print` statement at my disposal for all my debugging needs didn't I?
 
-Except that I started to come across certain limitations with this approach, which led me to start tracing going through code manually, trying to find out if the variable was a list or array, was the output a nested list or not, etc. I started thinking that there must be a better way and then I suddenly remembered that there was an in-built debugger that I constantly interacted with (mainly all I did was press `q` to get out of it) and that I had never explored its full potential. Granted that documentation on the use of the debugger was scarce (this is the world of `lisp` after all), and so I had to do a lot self-experimentation.
+Except that I started to come across certain limitations with this approach, which led me to start tracing going through code manually, trying to find out if the variable was a list or array, was the output a nested list or not, etc. I started thinking that there must be a better way and then I suddenly remembered that there was an in-built debugger that I constantly interacted with (mainly all I did was press `q` to get out of it) and that I had never explored its full potential. Granted that documentation on the use of the debugger was scarce (this is the world of Lisp after all), and so I had to do a lot self-experimentation.
 
 ### Invoking the beast
 SLDB will automatically pop-up whenever you try to compile code that has errors, such as calling functions with missing arguments, syntax issues in the code, etc. It looks like this:
@@ -184,7 +184,7 @@ As you can see there is a short description of the object at the top and summary
 You can see that the instance of class `foo` that we modified in the debugger has been updated.
 
 ### Stepping through manually
-Another great way to debug code, and one which until recently I've always one manually, is to step through the code, inspecting the variables at each point. An easy way to do this is to add a [break point](), this is triggered by inserting `(break)` at the point in the source where you want to inspect the current state. Using the previously defined function `test`, we add `(break)` just before we call the function recursively. This will allow us to see what happens to the variable `lst` as we call the function again and again.
+Another great way to debug code, and one which until recently I've always one manually, is to step through the code, inspecting the variables at each point. An easy way to do this is to add a [break point](http://en.wikipedia.org/wiki/Breakpoint), this is triggered by inserting `(break)` at the point in the source where you want to inspect the current state. Using the previously defined function `test`, we add `(break)` just before we call the function recursively. This will allow us to see what happens to the variable `lst` as we call the function again and again.
 
 <section class="code">
   {% highlight cl %}
