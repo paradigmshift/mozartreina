@@ -35,14 +35,7 @@ a:hover {
 #rss img{
   padding:0;
   margin:0;
-  width: 4em;
-}
-
-#rss p{
-  margin:0;
-  padding:0;
-  color: white;
-  font: small-caps bold 1em/1.5 verdana, helvetica-neue, helvetica, arial, san-serif;
+  width: 3.5em;
 }
  
 #main {
