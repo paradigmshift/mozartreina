@@ -23,6 +23,27 @@ a:hover {
   -moz-transition: 250ms ease-out;
   -webkit-transition: 250ms ease-out;
 }
+
+#rss {
+  position:absolute;
+  right: 3em;
+  top: 1em;
+  text-align: center;
+  opacity: 0.8;
+}
+
+#rss img{
+  padding:0;
+  margin:0;
+  width: 4em;
+}
+
+#rss p{
+  margin:0;
+  padding:0;
+  color: white;
+  font: small-caps bold 1em/1.5 verdana, helvetica-neue, helvetica, arial, san-serif;
+}
  
 #main {
   width: 810px;
@@ -67,7 +88,7 @@ a:hover {
   padding-right: 1em;
 }
 
-#menu li a {
+#menu li a {n
   display: block;
   width: 100px;
   height: 70px;
