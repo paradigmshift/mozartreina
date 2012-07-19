@@ -67,19 +67,34 @@ The function itself, as I said, is very raw and  unimaginative. It takes the ind
 
 The other function responsible for taking the output of the `parse-html` function is called `item-gen`. It generates an XML representation of each post. This is then passed to the first function that was written, `create-entry`, which will take all the entries and creates the complete RSS feed structure.
 
+Function `remove-quote`, which is called by `aggregate`, serves to remove any double quotation marks and `.html` tag marks (`>` and `<`). This is because they cause problems in the internal structure of the XML feed file if included.
+
 This is then written to disk and named `feed.xml`.
 
 <section class="code">
 {% highlight cl %}
+    (defun remove-quote (str)
+      (let ((q (search "\"" str))
+            (tag-beg (search "\<" str))
+            (tag-end (search "\>" str)))
+        (cond (q (progn (setf (char str q) #\space)
+                        (remove-quote str)))
+              (tag-beg (progn (setf (char str tag-beg) #\space)
+                              (remove-quote str)))
+              (tag-end (progn (setf (char str tag-end) #\space)
+                              (remove-quote str)))
+              (t str))))
+
     (defun parse-html (str beg end)
       (subseq str (search beg str) (search end str)))
 
     (defun item-gen (title address dscrp path)
-      (format nil "<item>
-                   <title> ~a </title> 
-                   <description> ~a </description> 
-                   <link> ~a/~a.html </link> 
-                   </item>" (subseq title 7) (subseq dscrp 3 50) path address))
+      (let ((dscrp (remove-quote dscrp)))
+        (format nil "<item>
+                   <title> ~a </title>
+                   <description> ~a </description>
+                   <link> ~a/~a.html </link>
+                   </item>" (subseq title 7) (subseq dscrp 3 50) path address)))
 
     (defun create-file (data)
       (with-open-file (stream "feed.xml"
