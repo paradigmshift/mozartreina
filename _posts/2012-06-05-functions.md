@@ -3,7 +3,7 @@ layout: post
 title: Functions
 ---
 ### Definition of a Function
-Functins are nothing more than equations where you can plug in an input variable `\(x\)` and get an output variable `\(y\)` in return.
+Functions are nothing more than equations where you can plug in an input variable `\(x\)` and get an output variable `\(y\)` in return.
 `\[
 x \xrightarrow{\text{input}}\boxed{function}\xrightarrow{\text{output}} y
 \]`
