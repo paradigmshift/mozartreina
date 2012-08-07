@@ -98,7 +98,7 @@ Variables are evaluated in the lexical environment, meaning that you can define 
 The other assertion expression most commonly used is `assert-true`, which will fail if the test or condition passed returns false.
 
 <section class="code">
-    (assert-true `\(\mbox{test}\)`)
+**(assert-true `\(\mbox{test}\)`)**
 </section>
 
 <section class="shell">
