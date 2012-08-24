@@ -248,7 +248,7 @@ One thing to keep in mind is that since the `:serial` parameter is set to `t`, t
 
 ### Bundling your Systems with Newly-Created Systems
 
-You might create a whole new project but are dependent on some previous system's code, e.g. again using my CMS as an expample, I had to load the system `aserve`, which is a  webserver called [AllegroServe](http://www.franz.com/support/documentation/current/doc/aserve/tutorial.html) by the guys over at [Franz](http://www.franz.com).
+You might create a whole new project but are dependent on some previous system's code, e.g. again using my CMS as an example, I had to load the system `aserve`, which is a  webserver called [AllegroServe](http://www.franz.com/support/documentation/current/doc/aserve/tutorial.html) by the guys over at [Franz](http://www.franz.com).
 
 You can do this by specifying the wanted library/project/system when you create a new project.
 

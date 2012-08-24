@@ -78,7 +78,7 @@ Backtraces, as mentioned earlier, are a record of the code being evaluated by th
 </section>
 *Backtrace with all variables exposed*
 
-...there is very useful information that can be gleaned from them. One of the most imortant things that can be retrieved are the values of variables at each stage of the execution.
+...there is very useful information that can be gleaned from them. One of the most important things that can be retrieved are the values of variables at each stage of the execution.
 
 For example, with the following source:
 
@@ -140,7 +140,7 @@ The Inspector is a tool that is used to determine the current status of a data s
     CL-USER> 
 </section>
 
-Enter the Inspector with `C-c I` and enter `*` when asked for the value to inspect (this tells the inspector to inspect the lastest value evaluated by the REPL). You should be presented with the following output.
+Enter the Inspector with `C-c I` and enter `*` when asked for the value to inspect (this tells the inspector to inspect the latest value evaluated by the REPL). You should be presented with the following output.
 
 <section class="shell">
     #<FOO {100426DEE3}>
@@ -266,6 +266,6 @@ We've only just scratched the surface of using the debugger, there are many more
 
 I also recommend hanging out at the **IRC** chatrooms and asking the more veteran hackers about using SLDB. `#lisp` at [irc.freenode.net](http://freenode.net/) is full of helpful people *as long as you ask relevant and intelligent* questions.
 
-And last but not least is **experiment**!! Everytime you get dropped into the debugger because of some error, poke around the stack and just try to understand what's going on, it will seem like a lot gobbleygook in the beginning but eventually you will become familiar with the error messages and start to understand what the debugger is trying to say.
+And last but not least is **experiment**!! Every time you get dropped into the debugger because of some error, poke around the stack and just try to understand what's going on, it will seem like a lot gobbleygook in the beginning but eventually you will become familiar with the error messages and start to understand what the debugger is trying to say.
 
 Have fun! 

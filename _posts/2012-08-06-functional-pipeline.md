@@ -4,7 +4,7 @@ title: Functional Pipelines
 ---
 
 ### Functional Pipelines? What's that?
-I came across this term when working through [Barski's](http://www.oreillynet.com/pub/au/3688) [Land of Lisp](http://landoflisp.com/) (be sure to check out his site [Lisperati](http://www.lisperati.com) as well!) on page 309. I've googled around a bit and there seems to be no formal definition on the web, [Pipeline Programming][] comes up frequently as a result of my queries, and although it seems similar i don't quite think that it's an exact explanation for what we're about to do. So for all practical purposes we'll stick with Barski's definition: *"A sucession of functions that operate, one after another, on a big chunk of data."*
+I came across this term when working through [Barski's](http://www.oreillynet.com/pub/au/3688) [Land of Lisp](http://landoflisp.com/) (be sure to check out his site [Lisperati](http://www.lisperati.com) as well!) on page 309. I've googled around a bit and there seems to be no formal definition on the web, [Pipeline Programming][] comes up frequently as a result of my queries, and although it seems similar i don't quite think that it's an exact explanation for what we're about to do. So for all practical purposes we'll stick with Barski's definition: *"A succession of functions that operate, one after another, on a big chunk of data."*
 
 But before we get into that, we should think about what the important concepts in functional programming are and what it really means to *"think functionally"*.
 
@@ -169,7 +169,7 @@ Let's generate a random example to give some visual imagery to what we're talkin
 
 This is the result of calling the `game-tree` function.
 
-The higlighted section designates the player whose turn it is, `0` is for player `A` and `1` is for player `B`; at the moment it is player `A`'s turn. The next bit is the present board: here it's saying that player `A` occupies one square of the board with 2 dice, while player `B` has 3 squares with 2, 1, and 1 die respectively.
+The highlighted section designates the player whose turn it is, `0` is for player `A` and `1` is for player `B`; at the moment it is player `A`'s turn. The next bit is the present board: here it's saying that player `A` occupies one square of the board with 2 dice, while player `B` has 3 squares with 2, 1, and 1 die respectively.
 
 <section class="shell">
     (0 #((0 2) (1 2) (1 1) (1 1))

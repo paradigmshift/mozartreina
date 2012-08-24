@@ -52,7 +52,7 @@ Here we will introduce the concept of the [`\(2^\text{nd}\)` Derivative](http://
 
 The `\(2^\text{nd}\)` Derivative is the derivative of the derivative, or in plainspeak, the rate of change of the slope. The slope, if you will recall, is the rate of change of the curve, which can be both constant (as in a straight line) or not (concave or curving lines). In the case of a curving line, the `\(2^\text{nd}\)` Derivative is used to determine how much the curve of the line is changing.
 
-When using Leibniz's notation it is denoted as:
+When using Lagrange's notation it is denoted as:
 `\[
   \large{f''(x)}
 \]`

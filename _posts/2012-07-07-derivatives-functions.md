@@ -28,7 +28,7 @@ Before we get go any further...
 ### What for?
 So what is the point of calculating the rate of change between two points? What are real-world examples where this is relevant?
 
-One application is in the calculation of moving bodies. Say an object (maybe a car?) is travelling around a corner and suddenly starts to skid, with the slope of the point where the car starts to skid, you can predict where the car will end up (it will travel in a [tangent](http://en.wikipedia.org/wiki/Tangent) to the curve).
+One application is in the calculation of moving bodies. Say an object (maybe a car?) is traveling around a corner and suddenly starts to skid, with the slope of the point where the car starts to skid, you can predict where the car will end up (it will travel in a [tangent](http://en.wikipedia.org/wiki/Tangent) to the curve).
 
 *car skidding at point `\((0,0)\)`, predicted line of travel in red*
 
@@ -40,7 +40,7 @@ One application is in the calculation of moving bodies. Say an object (maybe a c
  board.create('functiongraph', [function(x){return 0;}, 0,4],{strokeColor:'red', strokeWidth:3, dash:1, lastArrow:true});
 </script>
 
-Other uses of *Differentiation* (another term for calculating the derivative) include finding the mininum and maximum surface areas for given volumes (minimum amount of metal to create a cylinder of a certain volume, etc.) and determining the acceleration and velocity of a certain object from a given position ([Velocity and Acceleration from the position equation](http://www.jtaylor1142001.net/calcjat/Solutions/Diffapp1/DA1_1/avdiff.html)).
+Other uses of *Differentiation* (another term for calculating the derivative) include finding the minimum and maximum surface areas for given volumes (minimum amount of metal to create a cylinder of a certain volume, etc.) and determining the acceleration and velocity of a certain object from a given position ([Velocity and Acceleration from the position equation](http://www.jtaylor1142001.net/calcjat/Solutions/Diffapp1/DA1_1/avdiff.html)).
 
 ### Notation and Formula
 There are several notations in use for representing derivatives.
@@ -57,7 +57,7 @@ The formula for deriving the derivative of a function has to calculate the rate 
 `\[
 f'(x) = \frac {f(x + e) - f(x)} e
 \]`
-This is actually exactly the same as the slope formula presented above. `\(f(x + e)\)` is nothing more than `\(y_2\)`, where `\(e\)` is the difference between `\(y_1\)` and `\(y_2\)` therefore `\(y_1 + e = y_2\)` (when the variable `\(x\)` is plugged into the function, `\(y\)` comes out the other end). The bottom part of the equation has been simplified, in it's full form it would read `\(\frac {f(x + e) - f(x)} {(x + e) - x}\)`. Cancelling the positive and negative `\(x\)` leaves just `\(e\)`.
+This is actually exactly the same as the slope formula presented above. `\(f(x + e)\)` is nothing more than `\(y_2\)`, where `\(e\)` is the difference between `\(y_1\)` and `\(y_2\)` therefore `\(y_1 + e = y_2\)` (when the variable `\(x\)` is plugged into the function, `\(y\)` comes out the other end). The bottom part of the equation has been simplified, in it's full form it would read `\(\frac {f(x + e) - f(x)} {(x + e) - x}\)`. Canceling the positive and negative `\(x\)` leaves just `\(e\)`.
 
 #### Example
 Revisiting the function `\(f(x) = x^2\)` above, we've already shown how to determine the derivative, or slope, when two points are given. Again, the slope will quickly become more and more inaccurate as we go farther and farther from the given `\(x, y\)` coordinates. If we want to find the rate of change at any given point, we will have to use the afore-mentioned formula.
@@ -71,7 +71,7 @@ f'(x) = 2x + e \\
 
 Uh oh... now what? How do we handle `\(e\)`? `\(e\)` as you may recall is the difference between one point and the next, but since we're trying to determine the derivative of the *function* and not two points, how do we solve for `\(e\)`? This is where we introduce the concept of **limits**.
 
-Limits are an integral part of Calculus, but there are several types of limits. We will be applying the *limit of a function*, a short explanation and example of this can be found in the [wikipedia entry on limits](http://en.wikipedia.org/wiki/Limit_(mathematics)). To give a really brief example, say that you have a function `\(f(x)\)`, a number, `\(C\)` and the expression `\(f(x) = L\)`. As the variable `\(x\)` gets closer to `\(C\)`, the output of `\(f(x)\)` also gets closer to `\(f(x) = L\)`. When `\(x = C\)`, then `\(f(x) = L\)` becomes true, as `\(x\)` moves farther and farther away from `\(C\)`, the evaulation of `\(f(x)\)` also moves farther and farther away from `\(f(x) = L\)`.
+Limits are an integral part of Calculus, but there are several types of limits. We will be applying the *limit of a function*, a short explanation and example of this can be found in the [wikipedia entry on limits](http://en.wikipedia.org/wiki/Limit_(mathematics)). To give a really brief example, say that you have a function `\(f(x)\)`, a number, `\(C\)` and the expression `\(f(x) = L\)`. As the variable `\(x\)` gets closer to `\(C\)`, the output of `\(f(x)\)` also gets closer to `\(f(x) = L\)`. When `\(x = C\)`, then `\(f(x) = L\)` becomes true, as `\(x\)` moves farther and farther away from `\(C\)`, the evaluation of `\(f(x)\)` also moves farther and farther away from `\(f(x) = L\)`.
 
 A short example is in order to demonstrate this idea. Say `\(L = 5\)` and `\(C = 10\)` and `\(f(x) = \frac x 2\)`.
 

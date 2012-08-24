@@ -13,7 +13,7 @@ So what are the benefits of using Jekyll instead of using a full-blown CMS for y
 
 1. No database involved - all files are in html format. This keeps things simple and accessible, you can search for articles with **`grep`** for example.
 
-2. Github integration - there are numerous tutorials out there that cover using Jekyll and Githug pages to host your blog. All you have to do is push your content to Github to update your site.
+2. Github integration - there are numerous tutorials out there that cover using Jekyll and Github pages to host your blog. All you have to do is push your content to Github to update your site.
 
 3. Files are in text format - one of the biggest advantages to this is that you can write your new pages/entries with your favorite text editor instead of going through a web interface. I, for example, am using emacs to do all my writing.
 
@@ -25,7 +25,7 @@ So what are the basic requirements?
 
 - the [Ruby](http://www.ruby-lang.org/en/) programming language
 - [rdiscount](https://github.com/rtomayko/rdiscount) - ruby implementation of markdown
-- [pygment](http://pygments.org/) - cody syntax highlighting (optional)
+- [pygment](http://pygments.org/) - code syntax highlighting (optional)
 
 **Jekyll** and **rdiscount** can both be installed using ruby gems.
 
@@ -94,7 +94,7 @@ To start, create a basic *default* template page, which will for the basis for f
 {% endhighlight %}
 </section>
 
-You'll notice the non-html tags **`{% raw %} {% if page.title %} {{ page.title }} | {% endif %} {% endraw %}`**, this is part of the **[Liquid](http://liquidmarkup.org/)** templating lanuage that Jekyll incorporates. It's a way of introducing code into your html templates and pages. In this case it's just telling Jekyll that if there is a page title to print it out, followed by a vertical bar.
+You'll notice the non-html tags **`{% raw %} {% if page.title %} {{ page.title }} | {% endif %} {% endraw %}`**, this is part of the **[Liquid](http://liquidmarkup.org/)** templating language that Jekyll incorporates. It's a way of introducing code into your html templates and pages. In this case it's just telling Jekyll that if there is a page title to print it out, followed by a vertical bar.
 
 But how does Jekyll recognize the page title?
 

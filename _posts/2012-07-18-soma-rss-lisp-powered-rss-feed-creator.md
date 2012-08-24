@@ -61,7 +61,7 @@ This actually started out as a much smaller function but then grew to be some so
 
 The functions that work on the information from the `.html` files that are accessed are a crude parser (and when I say crude I mean ***crude***) and another function that takes the parsed data and injects it into the individual XML entry structure.
 
-The parse function (called `parse-html`) is used to exract the title from the `.html` file (if the file has no title tag then the program is screwed) and whatever is written between the first `<p> </p>` tags it encounters, this is used as the description for the entry.
+The parse function (called `parse-html`) is used to extract the title from the `.html` file (if the file has no title tag then the program is screwed) and whatever is written between the first `<p> </p>` tags it encounters, this is used as the description for the entry.
 
 The function itself, as I said, is very raw and  unimaginative. It takes the index location of two strings passed to it (here the `<title>` and `<p>` tags) then returns whatever is between the two strings using the `subseq` built-in function.
 

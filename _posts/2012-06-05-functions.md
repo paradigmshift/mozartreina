@@ -44,7 +44,7 @@ y & = & v(15) & y & = & v(-5) \\
 
 **An example of Relations**
 
-Conversion between `\(x^\circ\)` Farenheit to `\(y^\circ\)` Celsius.
+Conversion between `\(x^\circ\)` Fahrenheit to `\(y^\circ\)` Celsius.
 
 `\[\begin {array}{lll|lll}
 y & = & f(x) & x & = & 50^\circ F\\

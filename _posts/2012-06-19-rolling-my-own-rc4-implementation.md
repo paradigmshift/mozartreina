@@ -140,7 +140,7 @@ j := 0\\
 \)`
 </section>
 
-After each iteration of the loop, the resulting **`K`** is then **XOR**ed with one byte of the message, this progresses in a linear manner (so everytime a new computation for **`K`** is done, the next byte of the message is **XOR**ed).
+After each iteration of the loop, the resulting **`K`** is then **XOR**ed with one byte of the message, this progresses in a linear manner (so every time a new computation for **`K`** is done, the next byte of the message is **XOR**ed).
 
 **Lisp Implementation:**
 <section class="code">
@@ -201,4 +201,4 @@ This brings home an important point, encryption algorithms are best left to expe
 
 Full [source code](https://github.com/paradigmshift/salt-n-pepper) of my implementation. *Comments to the code are extremely welcome.*
 
-As a sidenote, regarding your security online, I recommend *salting* your passwords. [How to Salt your Passwords](http://peebs.org/heres-how-to-salt-your-own-passwords-and-prev) and [Avoiding Password Breaches](http://www.readwriteweb.com/archives/avoiding-password-breaches-101-salt-your-hash.php) are a good read for those who don't know where to start.
+As a side note, regarding your security online, I recommend *salting* your passwords. [How to Salt your Passwords](http://peebs.org/heres-how-to-salt-your-own-passwords-and-prev) and [Avoiding Password Breaches](http://www.readwriteweb.com/archives/avoiding-password-breaches-101-salt-your-hash.php) are a good read for those who don't know where to start.

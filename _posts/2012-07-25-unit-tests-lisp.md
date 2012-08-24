@@ -76,7 +76,7 @@ The results say that we were expecting 30 but got 50 instead, 2 tests passed and
 
 This particular example also highlights an important fact, that the tests themselves must be correct for them to be reliable gauges of correctness. The function `by-5` is designed to multiply any digit passed to it by 5, which in this case it did. The test passed it 10 and got 50, but it was expecting 30! This is a case of the test itself being wrong and not the function.
 
-Ok, so now that we've shown a particular example of how this testing library works, let's get down to the specifics: what are the possibl expressions that can be passed to the testing function?
+Ok, so now that we've shown a particular example of how this testing library works, let's get down to the specifics: what are the possible expressions that can be passed to the testing function?
 
 ### Assertion Forms
 The most common assertion form is expressed in this manner:
@@ -150,7 +150,7 @@ Then you can define the testing package in this manner:
 {% endhighlight %}
 </section>
 
-And voila! Integration ahs been achieved! You can then take these two `.lisp` files and combine them to form one coherent system using [Quickproject]((http://xach.livejournal.com/278047.html).
+And voila! Integration has been achieved! You can then take these two `.lisp` files and combine them to form one coherent system using [Quickproject]((http://xach.livejournal.com/278047.html).
 
 ### In Closing
 While my personal coding style is not anywhere near as test-centric as those found in the Test-Driven-Development and the afore-mentioned Agile and Extreme Programming movements, I do believe that testing has its place in the development of software, especially software that is intended for public use and that will be maintained and extended by other developers.
