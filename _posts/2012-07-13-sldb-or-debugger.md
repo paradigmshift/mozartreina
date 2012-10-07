@@ -39,21 +39,25 @@ The Backtrace will show the step by step evaluation of the commands up to the po
 And the code that produced it was this:
 
 <section class="shell">
-    CL-USER> (defun test (a b)
-               (+ a b))
-    TEST
-    CL-USER> (test 1 a)
+{% highlight console %}
+CL@USER$ (defun test (a b)
+          (+ a b))
+TEST
+CL@USER$ (test 1 a)
+{% endhighlight %}
 </section>
 
 So we defined a function `test` that took two arguments, `a` and `b`, and tried to add them with the `+` operator. The `+` operator can only combine numbers, it doesn't work for strings, or combinations of numbers and strings. This is demonstrated when we try to run the following code:
 
 <section class="shell">
-    (+ "hello" "there")
-    ....
-    ....
-    ....
-    The value "hello" is not of type NUMBER.
-       [Condition of type TYPE-ERROR]
+{% highlight console %}
+CL@USER$ (+ "hello" "there")
+....
+....
+....
+The value "hello" is not of type NUMBER.
+   [Condition of type TYPE-ERROR]
+{% endhighlight %}
 </section>
 
 In the previous example, we tried to add together a number (1) and a variable `a`, which was [unbound](http://www.cs.cmu.edu/Groups/AI/html/cltl/clm/node58.html), which means it had no inherent value. This error dropped us into the debugger immediately, where we were presented with the following options to try to correct the error.
@@ -91,7 +95,9 @@ For example, with the following source:
 </section>
 
 <section class="shell">
-    CL-USER> (test '(1 2 3 4 5 6)))
+{% highlight console %}
+CL@USER$ (test '(1 2 3 4 5 6)))
+{% endhighlight %}
 </section>
 
 The debugger will give us:
@@ -133,11 +139,13 @@ The Inspector is a tool that is used to determine the current status of a data s
 *example taken from the **slime** section of [lisp-book](http://lisp-book.org)*
 
 <section class="shell">
-    CL-USER> (defclass foo () (a  b c))
-    #<STANDARD-CLASS FOO>
-    CL-USER> (make-instance *)
-    #<FOO {100426DEE3}>
-    CL-USER> 
+{% highlight console %}
+CL@USER$ (defclass foo () (a  b c))
+#<STANDARD-CLASS FOO>
+CL@USER$ (make-instance *)
+#<FOO {100426DEE3}>
+CL@USER$
+{% endhighlight %}
 </section>
 
 Enter the Inspector with `C-c I` and enter `*` when asked for the value to inspect (this tells the inspector to inspect the latest value evaluated by the REPL). You should be presented with the following output.
@@ -177,8 +185,10 @@ As you can see there is a short description of the object at the top and summary
 </section>
 
 <section class="shell">
-    CL-USER> (slot-value * 'a)
-    45
+{% highlight console %}
+CL@USER$ (slot-value * 'a)
+45
+{% endhighlight %}
 </section>
 
 You can see that the instance of class `foo` that we modified in the debugger has been updated.

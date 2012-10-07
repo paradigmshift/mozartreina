@@ -30,17 +30,21 @@ So what are the basic requirements?
 **Jekyll** and **rdiscount** can both be installed using ruby gems.
 
 <section class="shell">
-    $ gem install jekyll
-    $ gem install rdiscount
+{% highlight console %}
+$ gem install jekyll
+$ gem install rdiscount
+{% endhighlight %}
 </section>
 
 Jekyll expects a certain directory structure, which in its simplest incarnation is:
 
 <section class="shell">
-    drwxr-xr-x   _includes
-    drwxr-xr-x   _layouts
-    drwxr-xr-x   _posts 
-    -rw-r--r--   _config.yml
+{% highlight console %}
+drwxr-xr-x   _includes
+drwxr-xr-x   _layouts
+drwxr-xr-x   _posts 
+-rw-r--r--   _config.yml
+{% endhighlight %}
 </section>
 
 The *_config.yml* file can actually be slightly complex, for now just put this in it:
@@ -121,7 +125,9 @@ Everything after the triple dashes are content, so in the index file about to be
 Now run the Jekyll server and point your browser to **[http://localhost:4000](http://localhost:4000)**:
 
 <section class="shell">
-    $ jekyll --server
+{% highlight console %}
+$ jekyll --server
+{% endhighlight %}
 </section>
 
 You should see a page based on your default template with the content you specified in your *index.html* file.
@@ -131,11 +137,13 @@ You should see a page based on your default template with the content you specif
 The simplest way of serving your Jekyll-powered site (or Jekyll-built site?) is to just copy the contents of the **`_site`** folder into the root directory of your webserver (on Linux/Unix boxes this is usually **`/var/www/`**). The contents of the **`_site`** folder are created everytime you run Jekyll in your project directory.
 
 <section class="shell">
-    $ jekyll
-    /usr/lib/ruby/1.9.1/rubygems/custom_require.rb:36:in `require': iconv will be deprecated in the future, use String#encode instead.
-    Configuration from /home/mo/dev/jekyll/mozartreina/_config.yml
-    Auto-regenerating enabled: /home/mo/dev/jekyll/mozartreina -> /home/mo/dev/jekyll/mozartreina/_site
-    [2012-05-10 18:14:07] regeneration: 16 files changed
+{% highlight console %}
+$ jekyll
+/usr/lib/ruby/1.9.1/rubygems/custom_require.rb:36:in `require': iconv will be deprecated in the future, use String#encode instead.
+Configuration from /home/mo/dev/jekyll/mozartreina/_config.yml
+Auto-regenerating enabled: /home/mo/dev/jekyll/mozartreina -> /home/mo/dev/jekyll/mozartreina/_site
+[2012-05-10 18:14:07] regeneration: 16 files changed
+{% endhighlight %}
 </section>
 
 A better way though would be to use [Github Pages](http://pages.github.com/), as this will allow you to update your website by just pushing your site to your repo.

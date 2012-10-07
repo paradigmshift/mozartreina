@@ -28,36 +28,42 @@ This tells ASDF that all your "systems" are located here.
 Load [Quickproject](https://github.com/xach/quickproject) through Quicklisp and create a project:
 
 <section class="shell">
-    CL-USER> (ql:quickload "quickproject")
-    To load "quickproject":
-      Load 1 ASDF system:
-        quickproject
-    ; Loading "quickproject"
+{% highlight console %}
+CL@USER$ (ql:quickload "quickproject")
+To load "quickproject":
+  Load 1 ASDF system:
+    quickproject
+; Loading "quickproject"
 
-    ("quickproject")
-    CL-USER> (quickproject:make-project "/home/mo/dev/lisp/my-tools/")
-    "my-tools"
+("quickproject")
+CL@USER$<(quickproject:make-project "/home/mo/dev/lisp/my-tools/")
+"my-tools"
+{% endhighlight %}
 </section>
 
 The last directory in the argument passed to `make-project` is created, if not already existing, and is also used as the project name. `make-project` then populates the directory with four files:
 
 <section class="shell">
-    |-README.txt
-    |-my-tools.asd
-    |-package.lisp
-    |-my-tools.lisp
+{% highlight console %}
+|-README.txt
+|-my-tools.asd
+|-package.lisp
+|-my-tools.lisp
+{% endhighlight %}
 </section>
 
 The project can now be called by ASDF and Quicklisp:
 
 <section class="shell">
-    CL-USER> (ql:quickload "my-tools")
-    To load "my-tools":
-      Load 1 ASDF system:
-        my-tools
-    ; Loading "my-tools"
-    [package my-tools]
-    ("my-tools")
+{% highlight console %}
+CL@USER$(ql:quickload "my-tools")
+To load "my-tools":
+  Load 1 ASDF system:
+    my-tools
+; Loading "my-tools"
+[package my-tools]
+("my-tools")
+{% endhighlight %}
 </section>
 
 Of course the source files are empty so nothing's going to happen, but at least we have now understood an easy way of creating Lisp systems.
@@ -149,24 +155,28 @@ If we want to call an external library, for example [Drakma](http://weitz.de/dra
 So let's try loading (or reloading) our new system. Remember, `my-tools.lisp` now contains our code so we should be able to call the functions in it.
 
 <section class="shell">
-    CL-USER> (ql:quickload "my-tools")
-    To load "my-tools":
-      Load 1 ASDF system:
-        my-tools
-    ; Loading "my-tools"
+{% highlight console %}
+CL@USER$ (ql:quickload "my-tools")
+To load "my-tools":
+  Load 1 ASDF system:
+    my-tools
+; Loading "my-tools"
 
-    ("my-tools")
+("my-tools")
+{% endhighlight %}
 </section>
 
 Now to test the functions found in `my-tools.lisp`:
 
 <section class="shell">
-    CL-USER> (my-tools::permute '(1 2 3 4))
-    ((4 1 2 3) (1 4 2 3) (1 2 4 3) (1 2 3 4) (4 1 3 2) (1 4 3 2) (1 3 4 2)
-     (1 3 2 4) (4 3 1 2) (3 4 1 2) (3 1 4 2) (3 1 2 4) (4 2 1 3) (2 4 1 3)
-     (2 1 4 3) (2 1 3 4) (4 2 3 1) (2 4 3 1) (2 3 4 1) (2 3 1 4) (4 3 2 1)
-     (3 4 2 1) (3 2 4 1) (3 2 1 4))
-    CL-USER> 
+{% highlight console %}
+CL@USER$ (my-tools::permute '(1 2 3 4))
+((4 1 2 3) (1 4 2 3) (1 2 4 3) (1 2 3 4) (4 1 3 2) (1 4 3 2) (1 3 4 2)
+ (1 3 2 4) (4 3 1 2) (3 4 1 2) (3 1 4 2) (3 1 2 4) (4 2 1 3) (2 4 1 3)
+ (2 1 4 3) (2 1 3 4) (4 2 3 1) (2 4 3 1) (2 3 4 1) (2 3 1 4) (4 3 2 1)
+ (3 4 2 1) (3 2 4 1) (3 2 1 4))
+CL@USER$
+{% endhighlight %}
 </section>
 
 It works! We can now load independent systems (and all their dependencies) through Quicklisp, making them ridiculously easy to use in other projects.
@@ -176,19 +186,20 @@ It works! We can now load independent systems (and all their dependencies) throu
 There is one glaring problem with the way we have organized the code however... if we try to call the function without the namespace prefix like so...
 
 <section class="shell">
-    CL-USER> (permute '(1 2 3 4))
-
-    ; in: PERMUTE '(1 2 3 4)
-    ;     (PERMUTE '(1 2 3 4))
-    ; 
-    ; caught STYLE-WARNING:
-    ;   undefined function: PERMUTE
-    ; 
-    ; compilation unit finished
-    ;   Undefined function:
-    ;     PERMUTE
-    ;   caught 1 STYLE-WARNING condition
-    ; Evaluation aborted on #<UNDEFINED-FUNCTION PERMUTE {1004BCECE3}>.
+{% highlight console %}
+CL@USER$ (permute '(1 2 3 4))
+; in: PERMUTE '(1 2 3 4)
+;     (PERMUTE '(1 2 3 4))
+; 
+; caught STYLE-WARNING:
+;   undefined function: PERMUTE
+; 
+; compilation unit finished
+;   Undefined function:
+;     PERMUTE
+;   caught 1 STYLE-WARNING condition
+; Evaluation aborted on #<UNDEFINED-FUNCTION PERMUTE {1004BCECE3}>.
+{% endhighlight %}
 </section>
 
 ... the `REPL` will complain. Of course we can just do what we did earlier and call it with double colons `my-tools::permute` but this is generally considered bad form, [read this post on packages](http://www.bookshelf.jp/texi/onlisp/onlisp_27.html) for the why. Instead we can add this to `package.lisp`.
@@ -206,18 +217,20 @@ There is one glaring problem with the way we have organized the code however... 
 Now the function is publicly available, we can call it with a single colon. First we reload the whole system, then try the newly available function.
 
 <section class="shell">
-    CL-USER> (ql:quickload "my-tools")
-    To load "my-tools":
-      Load 1 ASDF system:
-        my-tools
-    ; Loading "my-tools"
-    [package my-tools]
-    ("my-tools")
-    CL-USER> (my-tools:permute '(1 2 3 4))
-    ((4 1 2 3) (1 4 2 3) (1 2 4 3) (1 2 3 4) (4 1 3 2) (1 4 3 2) (1 3 4 2)
-     (1 3 2 4) (4 3 1 2) (3 4 1 2) (3 1 4 2) (3 1 2 4) (4 2 1 3) (2 4 1 3)
-     (2 1 4 3) (2 1 3 4) (4 2 3 1) (2 4 3 1) (2 3 4 1) (2 3 1 4) (4 3 2 1)
-     (3 4 2 1) (3 2 4 1) (3 2 1 4))
+{% highlight console %}
+CL@USER$(ql:quickload "my-tools")
+To load "my-tools":
+  Load 1 ASDF system:
+    my-tools
+; Loading "my-tools"
+[package my-tools]
+("my-tools")
+CL@USER$(my-tools:permute '(1 2 3 4))
+((4 1 2 3) (1 4 2 3) (1 2 4 3) (1 2 3 4) (4 1 3 2) (1 4 3 2) (1 3 4 2)
+ (1 3 2 4) (4 3 1 2) (3 4 1 2) (3 1 4 2) (3 1 2 4) (4 2 1 3) (2 4 1 3)
+ (2 1 4 3) (2 1 3 4) (4 2 3 1) (2 4 3 1) (2 3 4 1) (2 3 1 4) (4 3 2 1)
+ (3 4 2 1) (3 2 4 1) (3 2 1 4))
+{% endhighlight %}
 </section>
 
 ### Adding source files
@@ -253,13 +266,15 @@ You might create a whole new project but are dependent on some previous system's
 You can do this by specifying the wanted library/project/system when you create a new project.
 
 <section class="shell">
-    CL-USER> (quickproject:make-project "~/dev/lisp/my-cms/"
-                                        :depends-on '(aserve))
-    "my-cms"
-    CL-USER> 
-    CL-USER> (net.aserve:start :port 8000)
-    #<NET.ASERVE:WSERVER port 8000 {1002C5F453}>
-    CL-USER> 
+{% highlight console %}
+CL@USER$ (quickproject:make-project "~/dev/lisp/my-cms/"
+                      :depends-on '(aserve))
+"my-cms"
+CL@USER$
+CL@USER$ (net.aserve:start :port 8000)
+#<NET.ASERVE:WSERVER port 8000 {1002C5F453}>
+CL@USER$
+{% endhighlight %}
 </section>
 
 As you can see, once the system `aserve` is loaded, the packages that are bundled with it, like `net.aserve`, become available.

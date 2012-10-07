@@ -118,15 +118,17 @@ Enter stage right:
 `*posix-argv*` is SBCL's implementation specific method for recalling command-line arguments. We're calling index 1 and 2 because the first argument is the command `sbcl` itself.
 
 <section class="shell">
-    * *posix-argv*
-
-    ("sbcl")
-
+{% highlight console %}
+CL@USER$ *posix-argv*
+("sbcl")
+{% endhighlight %}
 </section>
 
 Now to create the executable, at the `REPL` enter:
 <section class="shell">
-    * (sb-ext:save-lisp-and-die "soma.lisp" :toplevel #'run-from-shell :executable t)
+{% highlight console %}
+CL@USER$ (sb-ext:save-lisp-and-die "soma.lisp" :toplevel #'run-from-shell :executable t)
+{% endhighlight %}
 </section>
 
 `save-lisp-and-die` will save the present runtime environment, including variables, to `soma.lisp`. The `:toplevel` parameter designates the function that is to be invoked when `soma.lisp` is triggered.

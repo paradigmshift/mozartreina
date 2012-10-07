@@ -17,13 +17,15 @@ Common Lisp itself has a very strong background in [Regression Testing](http://e
 Lisp-Unit can be installed through [Quicklisp](http://www.quicklisp.org/):
 
 <section class="shell">
-    CL-USER> (ql:quickload "lisp-unit")
+{% highlight console %}
+CL@USER$ (ql:quickload "lisp-unit")
     To load "lisp-unit":
       Load 1 ASDF system:
         lisp-unit
     ; Loading "lisp-unit"
 
     ("lisp-unit")
+{% endhighlight %}
 </section>
 
 ### Usage
@@ -33,14 +35,16 @@ Tests are defined with `define-test`:
 </section>
 
 <section class="shell">
-    CL-USER> (defun by-5 (x)
-               (* x 5))
-    BY-5
-    CL-USER> (define-test by-5
-               (assert-equal 10 (by-5 2))
-               (assert-equal 20 (by-5 4)))
-    BY-5
-    CL-USER> 
+{% highlight console %}
+CL@USER$ (defun by-5 (x)
+           (* x 5))
+BY-5
+CL@USER$ (define-test by-5
+           (assert-equal 10 (by-5 2))
+           (assert-equal 20 (by-5 4)))
+BY-5
+CL@USER$ 
+{% endhighlight %}
 </section>
 *here we've defined a custom function `by-5` that takes any number and multiplies it by 5, and defined a test, also called `by-5` which will try to ensure that if we pass 2 and 5 to the function `by-5`, it will return 10 and 20*
 
@@ -50,24 +54,28 @@ And run with `run-tests`:
 </section>
 
 <section class="shell">
-    CL-USER> (run-tests)
-    BY-5: 2 assertions passed, 0 failed.
-    ; No value
+{% highlight console %}
+CL@USER$ (run-tests)
+BY-5: 2 assertions passed, 0 failed.
+; No value
+{% endhighlight %}
 </section>
 
 As you can see, the function passed the two test-cases we gave it. If, however, we passed an input that didn't pass the test...
 
 <section class="shell">
-    CL-USER> (define-test by-5
-               (assert-equal 10 (by-5 2))
-               (assert-equal 20 (by-5 4))
-               (assert-equal 30 (by-5 10)))
-    BY-5
-    CL-USER> (run-tests)
-    BY-5: (BY-5 10) failed: 
-    Expected 30 but saw 50
-    BY-5: 2 assertions passed, 1 failed.
-    ; No value
+{% highlight console %}
+CL@USER$ (define-test by-5
+           (assert-equal 10 (by-5 2))
+           (assert-equal 20 (by-5 4))
+           (assert-equal 30 (by-5 10)))
+BY-5
+CL@USER$ (run-tests)
+BY-5: (BY-5 10) failed: 
+Expected 30 but saw 50
+BY-5: 2 assertions passed, 1 failed.
+; No value
+{% endhighlight %}
 </section>
 
 *here we are passing 10 to the function `by-5` and are expecting 30 as a result*
@@ -102,12 +110,14 @@ The other assertion expression most commonly used is `assert-true`, which will f
 </section>
 
 <section class="shell">
-    CL-USER> (lisp-unit:assert-true (> 7 3))
-    T
-    CL-USER> (lisp-unit:assert-true (> 7 10))
-    (> 7 10) failed: 
-    Expected T but saw NIL
-    NIL
+{% highlight console %}
+CL@USER$ (lisp-unit:assert-true (> 7 3))
+T
+CL@USER$ (lisp-unit:assert-true (> 7 10))
+(> 7 10) failed: 
+Expected T but saw NIL
+NIL
+{% endhighlight %}
 </section>
 
 ### Lisp-Unit in your Packages
@@ -115,38 +125,38 @@ Production-level code is almost always defined in its own namespace, or package.
 
 Lisp-Unit tests are easily integrated into the package ecosystem. If you have a package that is defined thus:
 
-<section class="code">
-{% highlight cl %}
-    CL-USER> (defpackage :my-package
-               (:use :cl)
-               (:export #:my-func-1
-                        #:my-func-2))
-    #<PACKAGE "MY-PACKAGE">
-    CL-USER> (in-package :my-package)
-    #<PACKAGE "MY-PACKAGE">
-    MY-PACKAGE> (defun my-func-1 (x)
-                  .....
-                (defun my-func-2 (y)
-                  .....
+<section class="shell">
+{% highlight console %}
+CL@USER$ (defpackage :my-package
+           (:use :cl)
+           (:export #:my-func-1
+                    #:my-func-2))
+#<PACKAGE "MY-PACKAGE">
+CL@USER$ (in-package :my-package)
+#<PACKAGE "MY-PACKAGE">
+MY-PACKAGE> (defun my-func-1 (x)
+              .....
+            (defun my-func-2 (y)
+              .....
 {% endhighlight %}
 </section>
 
 Then you can define the testing package in this manner:
 
-<section class="code">
-{% highlight cl %}
-    CL-USER> (defpackage :my-package-tests
-               (:use :cl :lisp-unit :my-package))
-    #<PACKAGE "MY-PACKAGE-TESTS">
-    CL-USER> (in-package :my-package-tests)
-    #<PACKAGE "MY-PACKAGE-TESTS">
-    MY-PACKAGE-TESTS> (define-test my-test
-                        (dotimes (i 10)
-                          (assert-equal i (my-func-1 i))))
-    MY-TEST
-    MY-PACKAGE-TESTS> (run-tests)
-    MY-TEST: 10 assertions passed, 0 failed.
-    ; No value
+<section class="shell">
+{% highlight console %}
+CL@USER$ (defpackage :my-package-tests
+           (:use :cl :lisp-unit :my-package))
+#<PACKAGE "MY-PACKAGE-TESTS">
+CL@USER$ (in-package :my-package-tests)
+#<PACKAGE "MY-PACKAGE-TESTS">
+MY-PACKAGE-TESTS> (define-test my-test
+                    (dotimes (i 10)
+                      (assert-equal i (my-func-1 i))))
+MY-TEST
+MY-PACKAGE-TESTS> (run-tests)
+MY-TEST: 10 assertions passed, 0 failed.
+; No value
 {% endhighlight %}
 </section>
 

@@ -169,14 +169,18 @@ Using my Lisp implementation, here are some examples:
 
 *passphrase: 123, text: 456*
 <section class="shell">
-    CL-USER> (code-decode "123" "456")
-    6Ë2
+{% highlight console %}
+CL@USER$ (code-decode "123" "456")
+6Ë2
+{% endhighlight %}
 </section>
 
 *passphrase: 123, text: 890*
 <section class="shell">
-    CL-USER> (code-decode "123" "890")
-    :Ç4
+{% highlight console %}
+CL@USER$ (code-decode "123" "890")
+:Ç4
+{% endhighlight %}
 </section>
 
 ### Wait a minute, what about decoding the stream?
@@ -184,14 +188,18 @@ Ciphering would be pretty useless if the decoding method didn't work... Let's se
 
 *passphrase: 123, ciphertext: 6Ë2*
 <section class="shell">
-    CL-USER> (code-decode "123" "6Ë2")
-    456
+{% highlight console %}
+CL@USER$ (code-decode "123" "6Ë2")
+456
+{% endhighlight %}
 </section>
 
 *passphrase: 123, ciphertext: :Ç4*
 <section class="shell">
-    CL-USER> (code-decode "123" ":Ç4")
-    890
+{% highlight console %}
+CL@USER$ (code-decode "123" ":Ç4")
+890
+{% endhighlight %}
 </section>
 
 ### Buggy Implementation, leave this type of stuff to the experts
