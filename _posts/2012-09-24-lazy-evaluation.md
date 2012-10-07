@@ -327,3 +327,5 @@ This way, you can create what amounts to an *infinite* list without exhausting t
 **Lazy Evaluation** is not without its downsides however, the biggest being a performance hit, as the computer now has to store a reference to the computation, and the result once the computation is done (this is called *memoization*, and is incredible useful if when used properly, but can be wasteful when not needed). As such, lazy evaluation should only be used when truly needed, as it can slow down code performance and create bottlenecks.
 
 ### Further Reading
+[The Real Point of Laziness](http://existentialtype.wordpress.com/2011-04-24/the-real-point-of-laziness/)
+[Non-Trivial Lazy Evaluation](http://www.stackoverflow.com/questions/7868507/non-trivial-lazy-evaluation/7868790#7868790)
