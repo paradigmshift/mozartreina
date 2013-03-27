@@ -2,7 +2,8 @@
 layout: post
 title: Setting up Jekyll
 ---
-<h3>The What and Why</h3>
+
+###The What and Why
 For a while now I've been thinking of using **[Jekyll](https://github.com/mojombo/jekyll/wiki)** for my online work. Previously I'd only ever used **[Django](https://www.djangoproject.com/)** but it seemed like a bit of overkill for what I wanted to do here.
 
 There are numerous tutorials out there for starting out with Jekyll, and for those that already have a running blog and just want to migrate, **[this](http://paulstamatiou.com/how-to-wordpress-to-jekyll)** is an  excellent guide (based on a Wordpress - Jekyll migration).
@@ -19,7 +20,7 @@ So what are the benefits of using Jekyll instead of using a full-blown CMS for y
 
 4. Static html - any half-decent webserver can serve 1000s of request / SECOND of static html files. If your website generates high traffic this becomes critical, websites that are generated on the fly on the other hand, can take up to 0.5 seconds to serve a single request. This is why a lot of blogs that are using PHP, Python, or any other language to create the requested pages on demand can all of a sudden have huge down times when they become popular; thousands or even just hundreds  of users requesting pages at the same time.
 
-<h3>The Back-end</h3>
+###The Back-end
 
 So what are the basic requirements?
 
@@ -57,7 +58,7 @@ The *_config.yml* file can actually be slightly complex, for now just put this i
 
 Here we're just telling Jekyll to use **rdiscount** as it's markdown implementation, that the base url is **`/`** (you will change this once you deploy the site, this is just for development), and that everytime you make a change to any of the files, the Jekyll server will rebuild the site automatically.
 
-<h3>Creating the Site</h3>
+###Creating the Site
 
 To start, create a basic *default* template page, which will for the basis for future pages, and put it in the **`_layouts`** folder. Mine for example is:
 
@@ -120,7 +121,7 @@ The triple dash `---` should be at the beginning of the file, no newlines before
 
 Everything after the triple dashes are content, so in the index file about to be created, Jekyll will place "Hey there!" in the section where we put {% raw %} **`{{ content }}`** {% endraw %} in the layout file.
 
-<h3>Serving the Site Locally...</h3>
+###Serving the Site Locally...
 
 Now run the Jekyll server and point your browser to **[http://localhost:4000](http://localhost:4000)**:
 
@@ -132,7 +133,7 @@ $ jekyll --server
 
 You should see a page based on your default template with the content you specified in your *index.html* file.
 
-<h3> ... and Serving the Site to the World!</h3>
+### ... and Serving the Site to the World!
 
 The simplest way of serving your Jekyll-powered site (or Jekyll-built site?) is to just copy the contents of the **`_site`** folder into the root directory of your webserver (on Linux/Unix boxes this is usually **`/var/www/`**). The contents of the **`_site`** folder are created everytime you run Jekyll in your project directory.
 
