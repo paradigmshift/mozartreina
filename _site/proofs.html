@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset=utf-8 />
+  <title>  Mathematical Induction (aka Proof by Induction) |  Mozart Reina </title>
+  <link rel="stylesheet" href="/css/styles.css" type="text/css" />
+  <link rel="stylesheet" href="/css/syntax.css" type="text/css" />
+  <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jsxgraph/0.93/jsxgraphcore.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://jsxgraph.uni-bayreuth.de/distrib/jsxgraph.css" />
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3/jquery.min.js"></script>
+  <script type="text/javascript" src="/scripts/menu.js"></script>
+  <script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    MathJax.Hub.Config({
+    tex2jax: {
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+    }
+    });
+    
+    MathJax.Hub.Queue(function() {
+    // Fix <code> tags after MathJax finishes running. This is a
+      // hack to overcome a shortcoming of Markdown. Discussion at
+      // https://github.com/mojombo/jekyll/issues/199
+      var all = MathJax.Hub.getAllJax(), i;
+      for(i = 0; i < all.length; i += 1) {
+                   all[i].SourceElement().parentNode.className += ' has-jax';
+                   }
+                   });
+  </script>
+  <script type="text/javascript">
+
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-33571143-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+
+  </script>
+</head>
+<body>
+  
+  <header id="top">
+    <h1> Math, Lisp, and general hackery </h1>
+  </header>
+
+  <div id="rss">
+    <a href="feed.xml">
+      <img src="/img/Feed-icon.svg"/>
+    </a>
+  </div>
+  
+  <nav role="navigation">
+    <ul id="menu">
+          <li><a href="/">Home</a>
+          <li><a href="/entries/">Entries</a></li>
+          <li><a href="/about/">About</a></li>
+    </ul>
+  </nav>
+ 
+  <div id="main">
+      <section id="content">
+  <h2> Mathematical Induction (aka Proof by Induction) </h2>
+  <section class="text">
+    <h3>What are Proofs and What are they Good for?</h3>
+
+<p>Mathematical proofs are statements, either written in informal words (called informal proofs) or in a language of symbols (called formal proofs), that prove certain theorems or conjectures. They are the way in which we can be certain that our idea is valid for all possible situations and not just the current one.</p>
+
+<p>While one of the main purposes of a Proof is to state, unequivocally, that a certain solution to a problem or that a certain insight into the nature of certain patterns is true, it is not, in my opinion, the most important reason to study and work on Proofs.</p>
+
+<p>It is the insight gained into the particular problem, or even in the problem's field, that is the real boon when you tries to prove a certain theorem. Proofs force you to approach the problem from a different angle, not just solving this particular incarnation but in trying to come up with a unifying formula for all possible permutations. Doing so, even if you are unsuccessful, will not only give you a deeper understanding of the problem at hand, but may also lead to deeper knowledge of other fields of mathematics.</p>
+
+<p>Proofs have also found their way into the functional programming paradigm, read this <a href="http://en.wikipedia.org/wiki/Curry-Howard_correspondence">entry</a> for more details.</p>
+
+<h3>Proofs by Induction</h3>
+
+<p>So the first type of proofs we'll be talking about is Proofs by Induction, also known as <a href="http://en.wikipedia.org/wiki/Mathematical_induction">Mathematical Induction</a>. It is a method where you prove that your hypothesis is true for the first case (called the <strong><em>base case</em></strong>), then for any random case (<strong><em>induction hypothesis</em></strong>), then for that particular random case <em>+1</em>.</p>
+
+<p>Let's do a quick demonstration:</p>
+
+<hr />
+
+<p><strong>Theorem 1: The sum of the first <code>\( n \)</code> odd numbers is <code>\( n^2 \)</code></strong>
+<code>\[ \begin{array}{lrrr}
+n = 2 |&amp; 1 + 3 = 4 &amp; \mbox{and}&amp;n^2 = 4 \\
+n = 3 |&amp; 1 + 3 + 5 = 9 &amp; \mbox{and}&amp;n^2 = 9 \\
+n = 4 |&amp; 1 + 3 + 5 + 7 = 16 &amp; \mbox{and}&amp;n^2 = 16
+\end {array}\]</code></p>
+
+<p><strong>Base Case</strong>, when <code>\(n = 1\)</code>:</p>
+
+<p><code>\(1^2 = 1\)</code></p>
+
+<p>So our theory holds true if <code>\(n = 1\)</code>. Now for the next step.</p>
+
+<p><strong>Induction Hypothesis</strong>, when <code>\(n = 5 \)</code>:</p>
+
+<p><code>\(\begin{align}
+&amp;1 + 3 + 5 + 7 + 9 &amp;=&amp; 25 \\
+&amp;5^2 &amp;=&amp; 25 \end{align}\)</code></p>
+
+<p>It also holds if <code>\(n = 5 \)</code>... however how can we prove that it will hold true for all other values without manually checking? Mathematical Induction states that if we can prove that <code>\(n + 1\)</code> is equal to <code>\(n^2\)</code>, then our hypothesis is correct.</p>
+
+<p><code>\(\begin{align} &amp;\mbox{when }n + 1 = 6: \\
+&amp;1 + 3 + 5 + 7 + 9 + 11 &amp;=&amp; 36 \\
+&amp;6^2 &amp;=&amp; 36 \end{align}\)</code></p>
+
+<p>So this proves our theory that you can find the sum of the first <code>\(n \mbox{odd}\)</code> numbers with the formula <code>\(n^2\)</code>.</p>
+
+<p>How about another example?</p>
+
+<hr />
+
+<p><strong>Theorem 2: The sum of the first <code>\(n\)</code> numbers can be computed with <code>\(\frac {n\left(n+1\right)} 2\)</code></strong></p>
+
+<p><strong>Base Case</strong>, when <code>\(n = 1\)</code>:</p>
+
+<p><code>\[\begin{array}{rcl}
+1&amp; =&amp; \frac {n\left(n+1\right)} {\scriptsize2} \\
+&amp; =&amp; \frac {n\left(1+1\right)} {\scriptsize2} \\
+&amp; =&amp; \frac {1\left(2\right)} {\scriptsize2} \\
+1&amp; =&amp; 1 \end{array}\]</code></p>
+
+<p><strong>Induction Hypothesis</strong>, when <code>\(n = 3\)</code>:</p>
+
+<p><code>\[\begin{array}{rcl}
+1 + 2 + 3&amp; =&amp; \frac {n\left(n+1\right)} {\scriptsize2} \\
+&amp; =&amp; \frac {3\left(3+1\right)} {\scriptsize2} \\
+&amp; =&amp; \frac {9+3} {\scriptsize2} \\
+6&amp; =&amp; 6 \end{array}\]</code></p>
+
+<p>Now to see if <code>\(n + 1\)</code> holds...</p>
+
+<p>According to our theory, <code>\(1 + 2 + 3 + 4 +...+ n \)</code> can be simplified as <code>\(\frac {n(n + 1)} 2\)</code>, so adding <code>\(\left(n + 1\right)\)</code> will look like this:
+<code>\[
+1 + 2 + 3 + 4 + n + (n + 1) = \frac {n(n + 1)} 2 + (n + 1)
+\]</code></p>
+
+<p>now if we add <code>\(\left(n + 1\right)\)</code> to the right side of the equation we end up with <code>\(\frac {\left(n+1\right)\left(\left(n+1\right) + 1\right)} 2\)</code></p>
+
+<p>So taking the simplified equation of the left side and adding <code>\(\left(n + 1\right)\)</code> to both sides we get:
+<code>\[\begin{array}{rcl}
+\frac {n\left(n + 1\right)} {\scriptsize2} + (n + 1) &amp; = &amp; \frac {\left(n+1\right)\left(\left(n+1\right) + 1\right)} {\scriptsize2} \\
+\left(n + 1\right)\left[\frac n {\scriptsize2} + 1\right] &amp; = &amp; \frac {\left(n+1\right)\left(n+2\right)} {\scriptsize2} \\
+n^2 + 3n + 2 &amp; = &amp; n^2 + 3n + 2
+\end{array}\]</code></p>
+
+<p>Let's try that out with a real number, when: <code>\(n + 1 = 4\)</code>
+<code>\[\begin{array}{rcl}
+1 + 2 + 3 + 4&amp; =&amp; \frac {\left(n+1\right)\left(\left(n+1\right) + 1\right)} {\scriptsize2} \\
+&amp; =&amp; \frac {4\left(4 + 1\right)} {\scriptsize2} \\
+&amp; =&amp; \frac {16 + 4} {\scriptsize2} \\
+10&amp; =&amp; 10 \end{array}\]</code></p>
+
+<p>As you can see, in the second example we proved the formula through the algebraic methods of factoring and combining polynomials, as well as using the theorem itself in the Proof (in the Proof we substituted <code>\(1 + 2 + 3 + 4 + .... + n\)</code> with <code>\(\frac {n(n+1)} 2\)</code> where it played a central role in proving itself); checking the hypothesis with a real number was secondary. Proofs such as these are generally seen as more rigid as they describe a general formula while proving the theorem with real numbers can be seen as validating only that particular case.</p>
+
+<h3>Conclusion...</h3>
+
+<p>Just as a knowledge of factoring and combining was necessary to validate this last Proof, so are other Proofs built on previously proved ones. This is an important reason that at least a basic understanding of Proofs and their methods is extremely beneficial.</p>
+
+<p>Further reading on the importance of Proofs:</p>
+
+<ul>
+<li><a href="http://www.math.sc.edu/~cooper/proofs.pdf">Why do we have to learn Proofs</a></li>
+<li><a href="http://ife.ens-lyon.fr/publications/edition-electronique/cerme6/wg2-03-hemmi-lofwall.pdf">Why do we need Proof</a></li>
+<li><a href="http://plus.maths.org/content/origins-proof">The origins of proof</a></li>
+</ul>
+
+
+    <h6>14 May 2012</h6>
+  </section>
+</section>
+
+
+
+  </div>
+  <footer>
+    <p>&#0169; Mozart Reina 2012 | All Rights Reserved. </p>
+  </footer>
+</body>
+</html>

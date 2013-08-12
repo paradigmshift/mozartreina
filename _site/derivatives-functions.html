@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset=utf-8 />
+  <title>  Derivatives of Functions |  Mozart Reina </title>
+  <link rel="stylesheet" href="/css/styles.css" type="text/css" />
+  <link rel="stylesheet" href="/css/syntax.css" type="text/css" />
+  <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jsxgraph/0.93/jsxgraphcore.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://jsxgraph.uni-bayreuth.de/distrib/jsxgraph.css" />
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3/jquery.min.js"></script>
+  <script type="text/javascript" src="/scripts/menu.js"></script>
+  <script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    MathJax.Hub.Config({
+    tex2jax: {
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+    }
+    });
+    
+    MathJax.Hub.Queue(function() {
+    // Fix <code> tags after MathJax finishes running. This is a
+      // hack to overcome a shortcoming of Markdown. Discussion at
+      // https://github.com/mojombo/jekyll/issues/199
+      var all = MathJax.Hub.getAllJax(), i;
+      for(i = 0; i < all.length; i += 1) {
+                   all[i].SourceElement().parentNode.className += ' has-jax';
+                   }
+                   });
+  </script>
+  <script type="text/javascript">
+
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-33571143-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+
+  </script>
+</head>
+<body>
+  
+  <header id="top">
+    <h1> Math, Lisp, and general hackery </h1>
+  </header>
+
+  <div id="rss">
+    <a href="feed.xml">
+      <img src="/img/Feed-icon.svg"/>
+    </a>
+  </div>
+  
+  <nav role="navigation">
+    <ul id="menu">
+          <li><a href="/">Home</a>
+          <li><a href="/entries/">Entries</a></li>
+          <li><a href="/about/">About</a></li>
+    </ul>
+  </nav>
+ 
+  <div id="main">
+      <section id="content">
+  <h2> Derivatives of Functions </h2>
+  <section class="text">
+    <h3>Derivatives?</h3>
+
+<p>A derivative of a function, in plainspeak, is the rate of change between points of the function when graphed. For example, for the function <code>\(f(x) = x^2\)</code>, when <code>\(x = 2\)</code> then <code>\(y = 4\)</code>, when <code>\(x = 4\)</code> then <code>\(y = 16\)</code>. When graphed, you get:</p>
+
+<div id="box" class="jxgbox"></div>
+
+
+<script type="text/javascript">
+ var board = JXG.JSXGraph.initBoard('box', {boundingbox: [-2, 20, 10, -2], axis:true});
+ var p1 = board.create('point',[2, 4], {name: "2,4"});
+ var p2 = board.create('point',[4, 16], {name: "4,16"});
+ board.create('functiongraph', [function(x){return x*x;},-3,5]);
+</script>
+
+
+<p>The derivative in this case is the difference between the two points, also called the <a href="http://www.purplemath.com/modules/slope.htm">slope</a>, which is calculated with the following formula:</p>
+
+<p><code>\[
+\large{m = \frac{y_2 - y_1} {x_2-x_1}} \\
+\]</code></p>
+
+<p>In this example that would be <code>\(\frac {16 - 4} {4 - 2} = \frac {12} 2 = 6 \)</code>. The rate of change between the two points is 6... with one caveat. Since the derivative was derived from two points, it is only accurate when used with these two points. The farther you get from these two points, the less accurate the slope becomes.</p>
+
+<p>If for example the second point is <code>\(\left(3,9\right)\)</code> instead of <code>\(\left(4,16\right)\)</code>, then <code>\(\frac {9 - 4} {3 - 2} = \frac 5 1 = 5\)</code>. The rate of change is then <strong>5</strong> instead of <strong>6</strong>, as in the previous case.</p>
+
+<p>Before we get go any further...</p>
+
+<h3>What for?</h3>
+
+<p>So what is the point of calculating the rate of change between two points? What are real-world examples where this is relevant?</p>
+
+<p>One application is in the calculation of moving bodies. Say an object (maybe a car?) is traveling around a corner and suddenly starts to skid, with the slope of the point where the car starts to skid, you can predict where the car will end up (it will travel in a <a href="http://en.wikipedia.org/wiki/Tangent">tangent</a> to the curve).</p>
+
+<p><em>car skidding at point <code>\((0,0)\)</code>, predicted line of travel in red</em></p>
+
+<div id="box2" class="jxgbox"></div>
+
+
+<script type="text/javascript">
+ var board = JXG.JSXGraph.initBoard('box2', {boundingbox: [-5, 10, 5, -5], axis:true});
+ var p1 = board.create('point', [0, 0]);
+ board.create('functiongraph', [function(x){return x*x;},-3,5], {firstArrow:true});
+ board.create('functiongraph', [function(x){return 0;}, 0,4],{strokeColor:'red', strokeWidth:3, dash:1, lastArrow:true});
+</script>
+
+
+<p>Other uses of <em>Differentiation</em> (another term for calculating the derivative) include finding the minimum and maximum surface areas for given volumes (minimum amount of metal to create a cylinder of a certain volume, etc.) and determining the acceleration and velocity of a certain object from a given position (<a href="http://www.jtaylor1142001.net/calcjat/Solutions/Diffapp1/DA1_1/avdiff.html">Velocity and Acceleration from the position equation</a>).</p>
+
+<h3>Notation and Formula</h3>
+
+<p>There are several notations in use for representing derivatives.</p>
+
+<p><a href="http://en.wikipedia.org/wiki/Gottfried_Wilhelm_Leibniz">Leibniz</a>, who independently of Isaac Newton came up with infinitesimal calculus, uses the notation <code>\(\large{\frac {dy} {dx}} \)</code> for derivatives.</p>
+
+<p><a href="http://en.wikipedia.org/wiki/Joseph_Louis_Lagrange">Lagrange's</a> notation uses the <code>\(\prime\)</code> symbol in conjunction with function notation <code>\(f'(x)\)</code>.</p>
+
+<p><a href="http://en.wikipedia.org/wiki/Leonhard_Euler">Euler</a> used a differential operator, denoted as <code>\(D\)</code>, which is prefixed to the function. This is seen as <code>\(D_xy\)</code>.</p>
+
+<p><a href="http://en.wikipedia.org/wiki/Isaac_Newton">Newton</a> used <em>dot notation</em>, which involves placing a dot over the dependent variable as seen in <code>\(\dot y = \frac {dy} {dt}\)</code>.</p>
+
+<p>The formula for deriving the derivative of a function has to calculate the rate of change between the points in the graphed function. The standard formula is:
+<code>\[
+f'(x) = \frac {f(x + e) - f(x)} e
+\]</code>
+This is actually exactly the same as the slope formula presented above. <code>\(f(x + e)\)</code> is nothing more than <code>\(y_2\)</code>, where <code>\(e\)</code> is the difference between <code>\(y_1\)</code> and <code>\(y_2\)</code> therefore <code>\(y_1 + e = y_2\)</code> (when the variable <code>\(x\)</code> is plugged into the function, <code>\(y\)</code> comes out the other end). The bottom part of the equation has been simplified, in it's full form it would read <code>\(\frac {f(x + e) - f(x)} {(x + e) - x}\)</code>. Canceling the positive and negative <code>\(x\)</code> leaves just <code>\(e\)</code>.</p>
+
+<h4>Example</h4>
+
+<p>Revisiting the function <code>\(f(x) = x^2\)</code> above, we've already shown how to determine the derivative, or slope, when two points are given. Again, the slope will quickly become more and more inaccurate as we go farther and farther from the given <code>\(x, y\)</code> coordinates. If we want to find the rate of change at any given point, we will have to use the afore-mentioned formula.</p>
+
+<p><code>\(f(x) = x^2 \\
+f'(x) = \frac {f(x + e) - f(x)} e \\
+f'(x) = \frac {(x + e)^2 - x^2} e \\
+f'(x) = \frac {x^2 + 2xe + e^2 - x^2} e \\
+f'(x) = 2x + e \\
+\)</code></p>
+
+<p>Uh oh... now what? How do we handle <code>\(e\)</code>? <code>\(e\)</code> as you may recall is the difference between one point and the next, but since we're trying to determine the derivative of the <em>function</em> and not two points, how do we solve for <code>\(e\)</code>? This is where we introduce the concept of <strong>limits</strong>.</p>
+
+<p>Limits are an integral part of Calculus, but there are several types of limits. We will be applying the <em>limit of a function</em>, a short explanation and example of this can be found in the <a href="http://en.wikipedia.org/wiki/Limit_(mathematics">wikipedia entry on limits</a>). To give a really brief example, say that you have a function <code>\(f(x)\)</code>, a number, <code>\(C\)</code> and the expression <code>\(f(x) = L\)</code>. As the variable <code>\(x\)</code> gets closer to <code>\(C\)</code>, the output of <code>\(f(x)\)</code> also gets closer to <code>\(f(x) = L\)</code>. When <code>\(x = C\)</code>, then <code>\(f(x) = L\)</code> becomes true, as <code>\(x\)</code> moves farther and farther away from <code>\(C\)</code>, the evaluation of <code>\(f(x)\)</code> also moves farther and farther away from <code>\(f(x) = L\)</code>.</p>
+
+<p>A short example is in order to demonstrate this idea. Say <code>\(L = 5\)</code> and <code>\(C = 10\)</code> and <code>\(f(x) = \frac x 2\)</code>.</p>
+
+<p><code>\(\mbox{If } x = 5, f(x) = \frac 5 2 = 2.5 \\
+\mbox{If } x = 6, f(x) = \frac 6 2 = 3 \\
+\mbox{If } x = 7, f(x) = \frac 7 2 = 3.5 \\
+\mbox{If } x = 8, f(x) = \frac 8 2 = 4 \\
+\text{and so on...} \\
+\mbox{when } x = C, f(x) = \frac {10} {2} = 5 \\
+\)</code></p>
+
+<p>So we say that as <code>\(x\)</code> approaches the value <code>\(L\)</code>, the statement <code>\(f(x) = L\)</code> becomes true. The notation for a limit is <code>\(\lim\limits_{x\rightarrow c}\)</code>, where <code>\(x\)</code> is approaching <code>\(c\)</code>. The complete expression of the above example would be:</p>
+
+<p><code>\[
+\lim_{x\rightarrow C}f(x) = L
+\]</code></p>
+
+<p>So now that we have defined limits, how do they apply to differentiation?</p>
+
+<p>Remember that <code>\(e\)</code> is the <em>distance</em> or <em>difference</em> between two points, but since we aren't solving for the difference between specific points but for the rate of change at <em>any</em> point, the solution here is to introduce a limit wherein we state that as <code>\(e\)</code> approaches <code>\(0\)</code> (when <code>\(e = 0\)</code> there is only one point), the equation becomes accurate.</p>
+
+<p><code>\[
+f'(x) = \lim_{e\rightarrow 0} 2x + e \\
+\]</code></p>
+
+<p>So going back to our equation:</p>
+
+<p><code>\(f'(x) = 2x + 0 \\
+f'(x) = 2x
+\)</code></p>
+
+<h3>One more?</h3>
+
+<p>Let's do one more example to make sure that we understand how derivatives work.</p>
+
+<p><code>\[
+f(x) = 20\sqrt x, x = 4
+\]</code></p>
+
+<p>We are looking for the tangent line at the given <code>\(x\)</code> coordinate. This means that we will calculate the derivative (remember that the derivative is just another name for the slope), then plug it into the equation for tangent lines:</p>
+
+<p><code>\[
+y = k(x - a) + f(a)
+\]</code></p>
+
+<p><em><code>\(k\)</code> is the slope, and <code>\(a\)</code> is the given <code>\(x\)</code> coordinate.</em></p>
+
+<p>So let's get on with it!</p>
+
+<p><code>\(\begin{array}{ll}
+f'(x) &amp;= \frac {f(x + e) - f(x)} e \\
+&amp; = \frac {f(4 + e) - f(4)} e \\
+&amp; = \frac {20\sqrt{4 + e} - 20 * 2} e \\
+&amp; = 20 \frac {\sqrt{4 + e} - 2} e * \frac {\sqrt{4 + e} + 2}{\sqrt{4 + e} + 2} \\
+&amp; = 20 \frac {4 + e - 4} {e{\sqrt{4 + e} + 2}} \\
+&amp; = \frac {20e} {e{\sqrt{4 + e} + 2}} \\
+&amp; = \frac {20} {\sqrt{4 + e} + 2} \\
+&amp; = \frac {20} {\sqrt{4 + 0} + 2} \\
+&amp; = \frac {20} 4 \\
+&amp; = 5
+\end{array}\)</code></p>
+
+<p>So the derivative is <code>\(5\)</code>, now to plug it into the tangent line equation (also called the <em><a href="http://en.wikipedia.org/wiki/Linear_equation#Point.E2.80.93slope_form">point slope formula</a></em>):</p>
+
+<p><code>\(y = 5(x - 4) + 40 \\
+y = 5x + 20 \\
+\)</code></p>
+
+<p>This is the equation of the line tangent to <code>\(f(x) = 20\sqrt x\)</code> at point <code>\((4,40)\)</code>. Let's graph the equations so that we can visualize the results better.</p>
+
+<div id="box3" class="jxgbox"></div>
+
+
+<script type="text/javascript">
+ var board = JXG.JSXGraph.initBoard('box3', {boundingbox: [-1, 80, 20, -1], axis:true});
+ var p1 = board.create('point', [4, 40], {name:"4,40"});
+ board.create('functiongraph', [function(x){return 20*(Math.sqrt(x));},0,10],{lastArrow:true});
+ board.create('functiongraph', [function(x){return 5*x+20;}, 0,10],{strokeColor:'red', strokeWidth:3, dash:1, lastArrow:true,});
+</script>
+
+
+<p><em>red is the tangent line equation</em></p>
+
+<h3>What's next?</h3>
+
+<p>For those interested in going deeper into derivatives and the mathematical techniques associated with it, I suggest the following resources:</p>
+
+<ul>
+<li><a href="http://www.khanacademy.org/math/calculus/v/the-chain-rule">Khan Academy on the Chain Rule</a></li>
+<li><a href="http://en.wikipedia.org/wiki/Differential_calculus#Applications_of_derivatives">Wikipedia entry on Applications of Derivatives</a></li>
+<li><a href="http://nostarch.com/mg_calculus.htm">Manga Guide to Calculus</a></li>
+</ul>
+
+
+    <h6>07 Jul 2012</h6>
+  </section>
+</section>
+
+
+
+  </div>
+  <footer>
+    <p>&#0169; Mozart Reina 2012 | All Rights Reserved. </p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset=utf-8 />
+  <title>  Unit Testing in Common Lisp |  Mozart Reina </title>
+  <link rel="stylesheet" href="/css/styles.css" type="text/css" />
+  <link rel="stylesheet" href="/css/syntax.css" type="text/css" />
+  <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jsxgraph/0.93/jsxgraphcore.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://jsxgraph.uni-bayreuth.de/distrib/jsxgraph.css" />
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3/jquery.min.js"></script>
+  <script type="text/javascript" src="/scripts/menu.js"></script>
+  <script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    MathJax.Hub.Config({
+    tex2jax: {
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+    }
+    });
+    
+    MathJax.Hub.Queue(function() {
+    // Fix <code> tags after MathJax finishes running. This is a
+      // hack to overcome a shortcoming of Markdown. Discussion at
+      // https://github.com/mojombo/jekyll/issues/199
+      var all = MathJax.Hub.getAllJax(), i;
+      for(i = 0; i < all.length; i += 1) {
+                   all[i].SourceElement().parentNode.className += ' has-jax';
+                   }
+                   });
+  </script>
+  <script type="text/javascript">
+
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-33571143-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+
+  </script>
+</head>
+<body>
+  
+  <header id="top">
+    <h1> Math, Lisp, and general hackery </h1>
+  </header>
+
+  <div id="rss">
+    <a href="feed.xml">
+      <img src="/img/Feed-icon.svg"/>
+    </a>
+  </div>
+  
+  <nav role="navigation">
+    <ul id="menu">
+          <li><a href="/">Home</a>
+          <li><a href="/entries/">Entries</a></li>
+          <li><a href="/about/">About</a></li>
+    </ul>
+  </nav>
+ 
+  <div id="main">
+      <section id="content">
+  <h2> Unit Testing in Common Lisp </h2>
+  <section class="text">
+    <h3>A Little about the History of Testing in Software Development</h3>
+
+<p>According to the <a href="http://en.wikipedia.org/wiki/Software_testing#History">wikipedia entry on testing</a>, testing, or writing unit-tests, sprung from a desire to formally separate debugging (which can be described as "fixing" errors <em>when they appear</em>) from assertion or verification (making sure that the code is correct).</p>
+
+<p>Whereas debugging can be seen as a reactive practice, <em>testing</em> is seen as a proactive method in which you don't wait for a bug to show up but actively try to produce one. This can be seen in the <a href="http://www.amazon.com/The-Software-Testing-Glenford-Myers/dp/0471043281">work</a> of <a href="http://en.wikipedia.org/wiki/Glenford_Myers">Glenford Myers</a>, who emphasized <em>breakage testing</em>, or "a successful test is one that finds a bug".</p>
+
+<p>Nowadays the Agile or Extreme development methods have popularized testing by espousing something called <a href="http://en.wikipedia.org/wiki/Test-driven_development">Test-Driven Development</a>, where unit tests are actually written before the code that they are supposed to test.</p>
+
+<p>Common Lisp itself has a very strong background in <a href="http://en.wikipedia.org/wiki/Regression_testing">Regression Testing</a>, tests that, as a primary purpose, ensure that whatever changes have been made, through updates or other channels, don't break existing implementations.</p>
+
+<h3>Lisp-Unit</h3>
+
+<p><a href="http://www.cs.northwestern.edu/academics/courses/325/readings/lisp-unit.html">Lisp-Unit</a> is a test library for Common Lisp that supports unit tests. This is the library that I've chosen to use for my future projects.</p>
+
+<p>Lisp-Unit can be installed through <a href="http://www.quicklisp.org/">Quicklisp</a>:</p>
+
+<p><section class="shell"></p>
+
+<div class="highlight"><pre><code class="console"><span class="gp">CL@USER$</span> <span class="o">(</span>ql:quickload <span class="s2">&quot;lisp-unit&quot;</span><span class="o">)</span>
+<span class="go">    To load &quot;lisp-unit&quot;:</span>
+<span class="go">      Load 1 ASDF system:</span>
+<span class="go">        lisp-unit</span>
+<span class="go">    ; Loading &quot;lisp-unit&quot;</span>
+
+<span class="go">    (&quot;lisp-unit&quot;)</span>
+</code></pre></div>
+
+
+<p></section></p>
+
+<h3>Usage</h3>
+
+<p>Tests are defined with <code>define-test</code>:
+<section class="code">
+<strong>(define-test <code>\(\mbox{name exp}_1\mbox{ exp}_2\)</code>...)</strong>
+</section></p>
+
+<p><section class="shell"></p>
+
+<div class="highlight"><pre><code class="console"><span class="gp">CL@USER$</span> <span class="o">(</span>defun by-5 <span class="o">(</span>x<span class="o">)</span>
+<span class="go">           (* x 5))</span>
+<span class="go">BY-5</span>
+<span class="gp">CL@USER$</span> <span class="o">(</span>define-test by-5
+<span class="go">           (assert-equal 10 (by-5 2))</span>
+<span class="go">           (assert-equal 20 (by-5 4)))</span>
+<span class="go">BY-5</span>
+<span class="gp">CL@USER$</span> 
+</code></pre></div>
+
+
+<p></section>
+<em>here we've defined a custom function <code>by-5</code> that takes any number and multiplies it by 5, and defined a test, also called <code>by-5</code> which will try to ensure that if we pass 2 and 5 to the function <code>by-5</code>, it will return 10 and 20</em></p>
+
+<p>And run with <code>run-tests</code>:
+<section class="code">
+<strong>(run-tests)</strong>
+</section></p>
+
+<p><section class="shell"></p>
+
+<div class="highlight"><pre><code class="console"><span class="gp">CL@USER$</span> <span class="o">(</span>run-tests<span class="o">)</span>
+<span class="go">BY-5: 2 assertions passed, 0 failed.</span>
+<span class="go">; No value</span>
+</code></pre></div>
+
+
+<p></section></p>
+
+<p>As you can see, the function passed the two test-cases we gave it. If, however, we passed an input that didn't pass the test...</p>
+
+<p><section class="shell"></p>
+
+<div class="highlight"><pre><code class="console"><span class="gp">CL@USER$</span> <span class="o">(</span>define-test by-5
+<span class="go">           (assert-equal 10 (by-5 2))</span>
+<span class="go">           (assert-equal 20 (by-5 4))</span>
+<span class="go">           (assert-equal 30 (by-5 10)))</span>
+<span class="go">BY-5</span>
+<span class="gp">CL@USER$</span> <span class="o">(</span>run-tests<span class="o">)</span>
+<span class="go">BY-5: (BY-5 10) failed: </span>
+<span class="go">Expected 30 but saw 50</span>
+<span class="go">BY-5: 2 assertions passed, 1 failed.</span>
+<span class="go">; No value</span>
+</code></pre></div>
+
+
+<p></section></p>
+
+<p><em>here we are passing 10 to the function <code>by-5</code> and are expecting 30 as a result</em></p>
+
+<p>The results say that we were expecting 30 but got 50 instead, 2 tests passed and 1 failed.</p>
+
+<p>This particular example also highlights an important fact, that the tests themselves must be correct for them to be reliable gauges of correctness. The function <code>by-5</code> is designed to multiply any digit passed to it by 5, which in this case it did. The test passed it 10 and got 50, but it was expecting 30! This is a case of the test itself being wrong and not the function.</p>
+
+<p>Ok, so now that we've shown a particular example of how this testing library works, let's get down to the specifics: what are the possible expressions that can be passed to the testing function?</p>
+
+<h3>Assertion Forms</h3>
+
+<p>The most common assertion form is expressed in this manner:
+<section class="code">
+<strong>(assert-equal <code>\(\mbox{value form}\)</code>)</strong>
+</section>
+where value is the expected value that the function is supposed to return, and form is the function that is being tested.</p>
+
+<p>Variables are evaluated in the lexical environment, meaning that you can define a test that examines multiple assertions at the same time.</p>
+
+<p><section class="code"></p>
+
+<div class="highlight"><pre><code class="cl">    <span class="p">(</span><span class="nv">define-test</span> <span class="nv">my-test</span>
+      <span class="p">(</span><span class="nb">dotimes</span> <span class="p">(</span> <span class="nv">i</span> <span class="mi">5</span><span class="p">)</span>
+        <span class="p">(</span><span class="nv">assert-equal</span> <span class="nv">i</span> <span class="p">(</span><span class="nv">my-function</span> <span class="nv">i</span><span class="p">))))</span>
+</code></pre></div>
+
+
+<p></section></p>
+
+<p>The other assertion expression most commonly used is <code>assert-true</code>, which will fail if the test or condition passed returns false.</p>
+
+<p><section class="code">
+<strong>(assert-true <code>\(\mbox{test}\)</code>)</strong>
+</section></p>
+
+<p><section class="shell"></p>
+
+<div class="highlight"><pre><code class="console"><span class="gp">CL@USER$</span> <span class="o">(</span>lisp-unit:assert-true <span class="o">(</span>&gt; 7 3<span class="o">))</span>
+<span class="go">T</span>
+<span class="gp">CL@USER$</span> <span class="o">(</span>lisp-unit:assert-true <span class="o">(</span>&gt; 7 10<span class="o">))</span>
+<span class="go">(&gt; 7 10) failed: </span>
+<span class="go">Expected T but saw NIL</span>
+<span class="go">NIL</span>
+</code></pre></div>
+
+
+<p></section></p>
+
+<h3>Lisp-Unit in your Packages</h3>
+
+<p>Production-level code is almost always defined in its own namespace, or package. In the case of prototype testing or exploratory programming, where the code will usually live in the <code>cl-user</code>, then the tests can also be defined here. In all other cases however, it is infinitely better to create a package and usually also a <a href="http://mozartreina.com/setting-up-lisp-systems.html">system</a> to make deployment and maintenance easier.</p>
+
+<p>Lisp-Unit tests are easily integrated into the package ecosystem. If you have a package that is defined thus:</p>
+
+<p><section class="shell"></p>
+
+<div class="highlight"><pre><code class="console"><span class="gp">CL@USER$</span> <span class="o">(</span>defpackage :my-package
+<span class="go">           (:use :cl)</span>
+<span class="go">           (:export #:my-func-1</span>
+<span class="go">                    #:my-func-2))</span>
+<span class="gp">#</span>&lt;PACKAGE <span class="s2">&quot;MY-PACKAGE&quot;</span>&gt;
+<span class="gp">CL@USER$</span> <span class="o">(</span>in-package :my-package<span class="o">)</span>
+<span class="gp">#</span>&lt;PACKAGE <span class="s2">&quot;MY-PACKAGE&quot;</span>&gt;
+<span class="go">MY-PACKAGE&gt; (defun my-func-1 (x)</span>
+<span class="go">              .....</span>
+<span class="go">            (defun my-func-2 (y)</span>
+<span class="go">              .....</span>
+</code></pre></div>
+
+
+<p></section></p>
+
+<p>Then you can define the testing package in this manner:</p>
+
+<p><section class="shell"></p>
+
+<div class="highlight"><pre><code class="console"><span class="gp">CL@USER$</span> <span class="o">(</span>defpackage :my-package-tests
+<span class="go">           (:use :cl :lisp-unit :my-package))</span>
+<span class="gp">#</span>&lt;PACKAGE <span class="s2">&quot;MY-PACKAGE-TESTS&quot;</span>&gt;
+<span class="gp">CL@USER$</span> <span class="o">(</span>in-package :my-package-tests<span class="o">)</span>
+<span class="gp">#</span>&lt;PACKAGE <span class="s2">&quot;MY-PACKAGE-TESTS&quot;</span>&gt;
+<span class="go">MY-PACKAGE-TESTS&gt; (define-test my-test</span>
+<span class="go">                    (dotimes (i 10)</span>
+<span class="go">                      (assert-equal i (my-func-1 i))))</span>
+<span class="go">MY-TEST</span>
+<span class="go">MY-PACKAGE-TESTS&gt; (run-tests)</span>
+<span class="go">MY-TEST: 10 assertions passed, 0 failed.</span>
+<span class="go">; No value</span>
+</code></pre></div>
+
+
+<p></section></p>
+
+<p>And voila! Integration has been achieved! You can then take these two <code>.lisp</code> files and combine them to form one coherent system using <a href="(http://xach.livejournal.com/278047.html">Quickproject</a>.</p>
+
+<h3>In Closing</h3>
+
+<p>While my personal coding style is not anywhere near as test-centric as those found in the Test-Driven-Development and the afore-mentioned Agile and Extreme Programming movements, I do believe that testing has its place in the development of software, especially software that is intended for public use and that will be maintained and extended by other developers.</p>
+
+<p>Libraries such as <code>Lisp-Unit</code> make writing these sort of tests easy and relatively pain-free, and I think that it would be a shame not to take advantage of these sort of tools.</p>
+
+    <h6>25 Jul 2012</h6>
+  </section>
+</section>
+
+
+
+  </div>
+  <footer>
+    <p>&#0169; Mozart Reina 2012 | All Rights Reserved. </p>
+  </footer>
+</body>
+</html>

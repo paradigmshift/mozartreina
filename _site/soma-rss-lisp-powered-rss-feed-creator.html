@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset=utf-8 />
+  <title>  Soma-RSS, a Lisp-powered RSS feed creator |  Mozart Reina </title>
+  <link rel="stylesheet" href="/css/styles.css" type="text/css" />
+  <link rel="stylesheet" href="/css/syntax.css" type="text/css" />
+  <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jsxgraph/0.93/jsxgraphcore.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://jsxgraph.uni-bayreuth.de/distrib/jsxgraph.css" />
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3/jquery.min.js"></script>
+  <script type="text/javascript" src="/scripts/menu.js"></script>
+  <script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    MathJax.Hub.Config({
+    tex2jax: {
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+    }
+    });
+    
+    MathJax.Hub.Queue(function() {
+    // Fix <code> tags after MathJax finishes running. This is a
+      // hack to overcome a shortcoming of Markdown. Discussion at
+      // https://github.com/mojombo/jekyll/issues/199
+      var all = MathJax.Hub.getAllJax(), i;
+      for(i = 0; i < all.length; i += 1) {
+                   all[i].SourceElement().parentNode.className += ' has-jax';
+                   }
+                   });
+  </script>
+  <script type="text/javascript">
+
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-33571143-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+
+  </script>
+</head>
+<body>
+  
+  <header id="top">
+    <h1> Math, Lisp, and general hackery </h1>
+  </header>
+
+  <div id="rss">
+    <a href="feed.xml">
+      <img src="/img/Feed-icon.svg"/>
+    </a>
+  </div>
+  
+  <nav role="navigation">
+    <ul id="menu">
+          <li><a href="/">Home</a>
+          <li><a href="/entries/">Entries</a></li>
+          <li><a href="/about/">About</a></li>
+    </ul>
+  </nav>
+ 
+  <div id="main">
+      <section id="content">
+  <h2> Soma-RSS, a Lisp-powered RSS feed creator </h2>
+  <section class="text">
+    <h3>The Project</h3>
+
+<p>As I mentioned previously in <a href="http://mozartreina.com/setting-up-jekyll.html">Setting up Jekyll</a>, I used Jekyll to setup this site, as I felt that using a framework like Django was a bit too much for what I needed.</p>
+
+<p>A feature that I never thought about before but have started thinking about introducing recently is the humble <a href="http://www.whatisrss.com/">RSS</a> feed. I feel that this has become an indispensable part of personal and commercial sites, aside from having a presence on social networks (something that I don't really feel is necessary for what I'm doing).</p>
+
+<p>Having decided to incorporate it, I had to decide how I would implement it... I could either write the feed file manually and modify it everytime a new post was made, which seemed really stupid, or write some code that would automate the process (makes more sense doesn't it?).</p>
+
+<p>Since I'm not using a database to store the posts and the whole site is static, I would have to write something that would take a directory, scour it for <code>.html</code> pages, extract certain information from them (title and some sort of description of the post), and build the <a href="http://www.landofcode.com/rss-tutorials/rss-structure.php">RSS XML</a> file.</p>
+
+<h3>Why Lisp?</h3>
+
+<p>I've implemented this in Lisp since it's been my language of choice for some time now (the only other one that I can claim to be somewhat proficient in is <a href="http://www.python.org/">Python</a>) and it seemed like a good project to do to practice my (amateurish) skills.</p>
+
+<h3>Implementing it</h3>
+
+<p>After looking at the XML structure that an RSS reader expected, I started banging out some code. The first thing I wrote was a function that would output the complete feed, ready for writing to a file on disk.</p>
+
+<p><section class="code"></p>
+
+<div class="highlight"><pre><code class="cl">    <span class="p">(</span><span class="nb">defun</span> <span class="nv">create-entry</span> <span class="p">(</span><span class="nv">items</span><span class="p">)</span>
+      <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">out</span> <span class="p">(</span><span class="nb">format</span> <span class="no">nil</span> <span class="s">&quot;&lt;?xml version=&#39;1.0&#39;?&gt;</span>
+<span class="s">                     &lt;rss version=&#39;2.0&#39;&gt;</span>
+<span class="s">                     &lt;channel&gt; </span>
+<span class="s">                     &lt;title&gt;Math, Lisp, and general hackery&lt;/title&gt; </span>
+<span class="s">                     &lt;description&gt;On-going documentation of my studies and projects&lt;/description&gt; </span>
+<span class="s">                     &lt;link&gt;http://mozartreina.com&lt;/link&gt; </span>
+<span class="s">                     ~{~a~}</span>
+<span class="s">                     &lt;/channel&gt;</span>
+<span class="s">                     &lt;/rss&gt;&quot;</span> <span class="nv">items</span><span class="p">)))</span>
+        <span class="nv">out</span><span class="p">))</span>
+</code></pre></div>
+
+
+<p></section></p>
+
+<p>This function would take as its argument a list that contained, pre-formatted, the entries or articles that would be read by the client reader.</p>
+
+<p>This function is actually the final piece, or semi final if you're counting the part that writes the data to a file, of the code that is called. From here I did a complete U-turn and wrote the first part of code that would be called by the program, the part that looked into a directory and accessed the <code>.html</code> files.</p>
+
+<p><section class="code"></p>
+
+<div class="highlight"><pre><code class="cl">    <span class="p">(</span><span class="nb">defun</span> <span class="nv">aggregate</span> <span class="p">(</span><span class="nv">dir</span> <span class="nv">path</span><span class="p">)</span>
+      <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">entries</span> <span class="p">(</span><span class="nb">directory</span> <span class="p">(</span><span class="nb">concatenate</span> <span class="ss">&#39;string</span> <span class="nv">dir</span> <span class="s">&quot;/*.html&quot;</span><span class="p">)))</span>
+            <span class="p">(</span><span class="nv">parsed-data</span> <span class="o">&#39;</span><span class="p">()))</span>
+        <span class="p">(</span><span class="nb">mapcar</span> <span class="p">(</span><span class="k">lambda</span><span class="p">(</span><span class="nv">x</span><span class="p">)</span>
+                  <span class="p">(</span><span class="nb">with-open-file</span> <span class="p">(</span><span class="nc">stream</span> <span class="nv">x</span>
+                                          <span class="ss">:direction</span> <span class="ss">:input</span><span class="p">)</span>
+                    <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">data</span> <span class="p">(</span><span class="nb">make-string</span> <span class="p">(</span><span class="nb">file-length</span> <span class="nc">stream</span><span class="p">))))</span>
+                      <span class="p">(</span><span class="nb">read-sequence</span> <span class="nv">data</span> <span class="nc">stream</span><span class="p">)</span>
+                      <span class="p">(</span><span class="nb">push</span> <span class="p">(</span><span class="nv">item-gen</span> <span class="p">(</span><span class="nv">parse-html</span> <span class="nv">data</span> <span class="s">&quot;&lt;title&gt;&quot;</span> <span class="s">&quot;&lt;/title&gt;&quot;</span><span class="p">)</span>
+                                      <span class="p">(</span><span class="nb">pathname-name</span> <span class="nv">x</span><span class="p">)</span>
+                                      <span class="p">(</span><span class="nv">parse-html</span> <span class="nv">data</span> <span class="s">&quot;&lt;p&gt;&quot;</span> <span class="s">&quot;&lt;/p&gt;&quot;</span><span class="p">)</span>
+                                      <span class="nv">path</span><span class="p">)</span>
+                            <span class="nv">parsed-data</span><span class="p">))))</span>
+                <span class="nv">entries</span><span class="p">)</span>
+        <span class="nv">parsed-data</span><span class="p">))</span>
+</code></pre></div>
+
+
+<p></section></p>
+
+<p>This actually started out as a much smaller function but then grew to be some sort of aggregator of the different bits of information returned by other, smaller, functions. It opens the directory passed as its first argument, lists all the <code>.html</code> files located inside, then opens them and passes them to several functions for data extraction. The output is a list of RSS entries in XML format that has to be inserted into the main XML feed file.</p>
+
+<p>The functions that work on the information from the <code>.html</code> files that are accessed are a crude parser (and when I say crude I mean <strong><em>crude</em></strong>) and another function that takes the parsed data and injects it into the individual XML entry structure.</p>
+
+<p>The parse function (called <code>parse-html</code>) is used to extract the title from the <code>.html</code> file (if the file has no title tag then the program is screwed) and whatever is written between the first <code>&lt;p&gt; &lt;/p&gt;</code> tags it encounters, this is used as the description for the entry.</p>
+
+<p>The function itself, as I said, is very raw and  unimaginative. It takes the index location of two strings passed to it (here the <code>&lt;title&gt;</code> and <code>&lt;p&gt;</code> tags) then returns whatever is between the two strings using the <code>subseq</code> built-in function.</p>
+
+<p>The other function responsible for taking the output of the <code>parse-html</code> function is called <code>item-gen</code>. It generates an XML representation of each post. This is then passed to the first function that was written, <code>create-entry</code>, which will take all the entries and creates the complete RSS feed structure.</p>
+
+<p>Function <code>remove-quote</code>, which is called by <code>aggregate</code>, serves to remove any double quotation marks and <code>.html</code> tag marks (<code>&gt;</code> and <code>&lt;</code>). This is because they cause problems in the internal structure of the XML feed file if included.</p>
+
+<p>This is then written to disk and named <code>feed.xml</code>.</p>
+
+<p><section class="code"></p>
+
+<div class="highlight"><pre><code class="cl">    <span class="p">(</span><span class="nb">defun</span> <span class="nv">remove-quote</span> <span class="p">(</span><span class="nv">str</span><span class="p">)</span>
+      <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">q</span> <span class="p">(</span><span class="nb">search</span> <span class="s">&quot;\&quot;&quot;</span> <span class="nv">str</span><span class="p">))</span>
+            <span class="p">(</span><span class="nv">tag-beg</span> <span class="p">(</span><span class="nb">search</span> <span class="s">&quot;\&lt;&quot;</span> <span class="nv">str</span><span class="p">))</span>
+            <span class="p">(</span><span class="nv">tag-end</span> <span class="p">(</span><span class="nb">search</span> <span class="s">&quot;\&gt;&quot;</span> <span class="nv">str</span><span class="p">)))</span>
+        <span class="p">(</span><span class="nb">cond</span> <span class="p">(</span><span class="nv">q</span> <span class="p">(</span><span class="k">progn</span> <span class="p">(</span><span class="nb">setf</span> <span class="p">(</span><span class="nb">char</span> <span class="nv">str</span> <span class="nv">q</span><span class="p">)</span> <span class="sc">#\space</span><span class="p">)</span>
+                        <span class="p">(</span><span class="nv">remove-quote</span> <span class="nv">str</span><span class="p">)))</span>
+              <span class="p">(</span><span class="nv">tag-beg</span> <span class="p">(</span><span class="k">progn</span> <span class="p">(</span><span class="nb">setf</span> <span class="p">(</span><span class="nb">char</span> <span class="nv">str</span> <span class="nv">tag-beg</span><span class="p">)</span> <span class="sc">#\space</span><span class="p">)</span>
+                              <span class="p">(</span><span class="nv">remove-quote</span> <span class="nv">str</span><span class="p">)))</span>
+              <span class="p">(</span><span class="nv">tag-end</span> <span class="p">(</span><span class="k">progn</span> <span class="p">(</span><span class="nb">setf</span> <span class="p">(</span><span class="nb">char</span> <span class="nv">str</span> <span class="nv">tag-end</span><span class="p">)</span> <span class="sc">#\space</span><span class="p">)</span>
+                              <span class="p">(</span><span class="nv">remove-quote</span> <span class="nv">str</span><span class="p">)))</span>
+              <span class="p">(</span><span class="no">t</span> <span class="nv">str</span><span class="p">))))</span>
+
+    <span class="p">(</span><span class="nb">defun</span> <span class="nv">parse-html</span> <span class="p">(</span><span class="nv">str</span> <span class="nv">beg</span> <span class="nv">end</span><span class="p">)</span>
+      <span class="p">(</span><span class="nb">subseq</span> <span class="nv">str</span> <span class="p">(</span><span class="nb">search</span> <span class="nv">beg</span> <span class="nv">str</span><span class="p">)</span> <span class="p">(</span><span class="nb">search</span> <span class="nv">end</span> <span class="nv">str</span><span class="p">)))</span>
+
+    <span class="p">(</span><span class="nb">defun</span> <span class="nv">item-gen</span> <span class="p">(</span><span class="nv">title</span> <span class="nv">address</span> <span class="nv">dscrp</span> <span class="nv">path</span><span class="p">)</span>
+      <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">dscrp</span> <span class="p">(</span><span class="nv">remove-quote</span> <span class="nv">dscrp</span><span class="p">)))</span>
+        <span class="p">(</span><span class="nb">format</span> <span class="no">nil</span> <span class="s">&quot;&lt;item&gt;</span>
+<span class="s">                   &lt;title&gt; ~a &lt;/title&gt;</span>
+<span class="s">                   &lt;description&gt; ~a &lt;/description&gt;</span>
+<span class="s">                   &lt;link&gt; ~a/~a.html &lt;/link&gt;</span>
+<span class="s">                   &lt;/item&gt;&quot;</span> <span class="p">(</span><span class="nb">subseq</span> <span class="nv">title</span> <span class="mi">7</span><span class="p">)</span> <span class="p">(</span><span class="nb">subseq</span> <span class="nv">dscrp</span> <span class="mi">3</span> <span class="mi">50</span><span class="p">)</span> <span class="nv">path</span> <span class="nv">address</span><span class="p">)))</span>
+
+    <span class="p">(</span><span class="nb">defun</span> <span class="nv">create-file</span> <span class="p">(</span><span class="nv">data</span><span class="p">)</span>
+      <span class="p">(</span><span class="nb">with-open-file</span> <span class="p">(</span><span class="nc">stream</span> <span class="s">&quot;feed.xml&quot;</span>
+                              <span class="ss">:direction</span> <span class="ss">:output</span>
+                              <span class="ss">:if-exists</span> <span class="ss">:supersede</span><span class="p">)</span>
+        <span class="p">(</span><span class="nb">format</span> <span class="nc">stream</span> <span class="s">&quot;~a&quot;</span> <span class="nv">data</span><span class="p">)))</span>
+</code></pre></div>
+
+
+<p></section></p>
+
+<h3>Calling the Program from the Command Line</h3>
+
+<p>Now unless you want to fire up the <code>REPL</code> and load the program everytime you want to use it, you're going to have to find a way to call it from the command line and pass arguments to it.</p>
+
+<p>Enter stage right:
+<section class="code"></p>
+
+<div class="highlight"><pre><code class="cl">    <span class="p">(</span><span class="nb">defun</span> <span class="nv">run-from-shell</span> <span class="p">()</span>
+      <span class="p">(</span><span class="nv">create-file</span> <span class="p">(</span><span class="nv">create-entry</span> <span class="p">(</span><span class="nv">aggregate</span> <span class="p">(</span><span class="nb">nth</span> <span class="mi">1</span> <span class="vg">*posix-argv*</span><span class="p">)</span> <span class="p">(</span><span class="nb">nth</span> <span class="mi">2</span> <span class="vg">*posix-argv*</span><span class="p">)))))</span>
+</code></pre></div>
+
+
+<p></section></p>
+
+<p><code>*posix-argv*</code> is SBCL's implementation specific method for recalling command-line arguments. We're calling index 1 and 2 because the first argument is the command <code>sbcl</code> itself.</p>
+
+<p><section class="shell"></p>
+
+<div class="highlight"><pre><code class="console"><span class="gp">CL@USER$</span> *posix-argv*
+<span class="go">(&quot;sbcl&quot;)</span>
+</code></pre></div>
+
+
+<p></section></p>
+
+<p>Now to create the executable, at the <code>REPL</code> enter:
+<section class="shell"></p>
+
+<div class="highlight"><pre><code class="console"><span class="gp">CL@USER$</span> <span class="o">(</span>sb-ext:save-lisp-and-die <span class="s2">&quot;soma.lisp&quot;</span> :toplevel <span class="c">#&#39;run-from-shell :executable t)</span>
+</code></pre></div>
+
+
+<p></section></p>
+
+<p><code>save-lisp-and-die</code> will save the present runtime environment, including variables, to <code>soma.lisp</code>. The <code>:toplevel</code> parameter designates the function that is to be invoked when <code>soma.lisp</code> is triggered.</p>
+
+<h3>Bugs</h3>
+
+<p>Well, like I mentioned before, the program takes a few things for granted, like a <code>&lt;title&gt;</code> tag in the <code>.html</code> files, for which it has no fail-safe mechanism. A few other things like the main title and link of the feed are hard-coded in, since I basically wrote this for myself. It also assumes that all the <code>.html</code> files are found in one place and that the permalink structure is the same for all of them. I did however, take the time to make most of the code generic, allowing it to be used by others with what I hope is <em>minimal</em> modification.</p>
+
+<p>The complete code, along with some documentation, can be found in my <a href="https://github.com/paradigmshift/soma-rss">GitHub</a> repo.</p>
+
+    <h6>18 Jul 2012</h6>
+  </section>
+</section>
+
+
+
+  </div>
+  <footer>
+    <p>&#0169; Mozart Reina 2012 | All Rights Reserved. </p>
+  </footer>
+</body>
+</html>

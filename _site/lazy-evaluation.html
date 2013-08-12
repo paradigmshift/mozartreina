@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset=utf-8 />
+  <title>  Lazy Evaluation |  Mozart Reina </title>
+  <link rel="stylesheet" href="/css/styles.css" type="text/css" />
+  <link rel="stylesheet" href="/css/syntax.css" type="text/css" />
+  <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jsxgraph/0.93/jsxgraphcore.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://jsxgraph.uni-bayreuth.de/distrib/jsxgraph.css" />
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3/jquery.min.js"></script>
+  <script type="text/javascript" src="/scripts/menu.js"></script>
+  <script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    MathJax.Hub.Config({
+    tex2jax: {
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+    }
+    });
+    
+    MathJax.Hub.Queue(function() {
+    // Fix <code> tags after MathJax finishes running. This is a
+      // hack to overcome a shortcoming of Markdown. Discussion at
+      // https://github.com/mojombo/jekyll/issues/199
+      var all = MathJax.Hub.getAllJax(), i;
+      for(i = 0; i < all.length; i += 1) {
+                   all[i].SourceElement().parentNode.className += ' has-jax';
+                   }
+                   });
+  </script>
+  <script type="text/javascript">
+
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-33571143-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+
+  </script>
+</head>
+<body>
+  
+  <header id="top">
+    <h1> Math, Lisp, and general hackery </h1>
+  </header>
+
+  <div id="rss">
+    <a href="feed.xml">
+      <img src="/img/Feed-icon.svg"/>
+    </a>
+  </div>
+  
+  <nav role="navigation">
+    <ul id="menu">
+          <li><a href="/">Home</a>
+          <li><a href="/entries/">Entries</a></li>
+          <li><a href="/about/">About</a></li>
+    </ul>
+  </nav>
+ 
+  <div id="main">
+      <section id="content">
+  <h2> Lazy Evaluation </h2>
+  <section class="text">
+    <h3>Lazy and Eager</h3>
+
+<p><strong>Lazy Evaluation</strong> is a technique in which expressions, and the functions in which they're found, are evaluated only when the value that they are supposed to return is needed. This in contrast to <strong>Eager Evaluation</strong>, where the expressions are evaluated immediately during run time.</p>
+
+<p>Let's do a quick example to show how both methods work, say we have a simple function that adds two numbers together:</p>
+
+<p><section class="code"></p>
+
+<div class="highlight"><pre><code class="cl">    <span class="p">(</span><span class="nb">defun</span> <span class="nv">example</span> <span class="p">(</span><span class="nv">x</span> <span class="nv">y</span><span class="p">)</span>
+      <span class="p">(</span><span class="nb">+</span> <span class="nv">x</span> <span class="nv">y</span><span class="p">))</span>
+</code></pre></div>
+
+
+<p></section></p>
+
+<p>Now we'll create a list and populate it with the values returned by this function:</p>
+
+<p><section class="shell"></p>
+
+<div class="highlight"><pre><code class="console"><span class="gp">CL@USER$</span> <span class="o">(</span>loop repeat 4
+<span class="go">              for x = 1 then (setf x (incf x))</span>
+<span class="go">              collect (example x (1+ x)))</span>
+<span class="go">(3 5 7 9)</span>
+</code></pre></div>
+
+
+<p></section></p>
+
+<p>As you can see, the list is populated by the results of the function. We first called function and passed it the values 1 and 2, then 2 and 3, and so on. The values were calculated immediately and put into the list.</p>
+
+<p>Now let's see what happens when we use lazy evaluation. First we define a function and make it use lazy evaluation:</p>
+
+<p><section class="code"></p>
+
+<div class="highlight"><pre><code class="cl">    <span class="p">(</span><span class="nb">defun</span> <span class="nv">lazy-example</span> <span class="p">(</span><span class="nv">x</span> <span class="nv">y</span><span class="p">)</span>
+      <span class="p">(</span><span class="nv">lazy</span> <span class="p">(</span><span class="nb">+</span> <span class="nv">x</span> <span class="nv">y</span><span class="p">)))</span>
+</code></pre></div>
+
+
+<p></section></p>
+
+<p>Then we try to populate the list with the results from our lazy function:</p>
+
+<p><section class="shell"></p>
+
+<div class="highlight"><pre><code class="console"><span class="gp">CL@USER%</span> <span class="o">(</span>loop repeat 4
+<span class="go">              for x = 1 then (setf x (incf x))</span>
+<span class="go">              collect (lazy-example x (1+ x)))</span>
+<span class="go">(#&lt;CLOSURE (LAMBDA # :IN LAZY-EXAMPLE) {10049BECFB}&gt;</span>
+<span class="go"> #&lt;CLOSURE (LAMBDA # :IN LAZY-EXAMPLE) {10049BED5B}&gt;</span>
+<span class="go"> #&lt;CLOSURE (LAMBDA # :IN LAZY-EXAMPLE) {10049BEDBB}&gt;</span>
+<span class="go"> #&lt;CLOSURE (LAMBDA # :IN LAZY-EXAMPLE) {10049BEE1B}&gt;)</span>
+</code></pre></div>
+
+
+<p></section></p>
+
+<p>The list elements are referencing the function objects and not the results! What's going on here?</p>
+
+<p>In this case the function has not been evaluated, and will remain in this state until we tell it explicitly to perform the calculation, like so:</p>
+
+<p><section class="shell"></p>
+
+<div class="highlight"><pre><code class="console"><span class="gp">CL@USER$</span> <span class="o">(</span>force <span class="o">(</span>lazy-example 1 2<span class="o">))</span>
+<span class="go">3</span>
+</code></pre></div>
+
+
+<p></section></p>
+
+<p>To get the values of the previous list, we just call <code>force</code> on all the elements.</p>
+
+<p><section class="shell"></p>
+
+<div class="highlight"><pre><code class="console"><span class="gp">CL@USER$</span> <span class="o">(</span>mapcar <span class="c">#&#39;force</span>
+<span class="go">          (loop repeat 4</span>
+<span class="go">              for x = 1 then (setf x (incf x))</span>
+<span class="go">              collect (lazy-example x (1+ x))))</span>
+<span class="go">(3 5 7 9)</span>
+</code></pre></div>
+
+
+<p></section></p>
+
+<h3>So What's the Point?</h3>
+
+<p>Ok, seems like a cool party trick... but how is this relevant to software development in general? Are there any instances where we wouldn't want the computer to evaluated all functions immediately and only when we specifically tell it to?</p>
+
+<h4>Case Study #1: Control Structures in Programming Languages</h4>
+
+<p>Control Structures are the common  forms <strong><code>if</code></strong>, <strong><code>or</code></strong>, etc. found in almost all programming languages. The only way these can be properly implemented is with lazy evaluation, since flow of the program will branch out between two (or more) possible choices and not all will be evaluated.</p>
+
+<p><section class="shell"></p>
+
+<div class="highlight"><pre><code class="console"><span class="gp">CL@USER$</span> <span class="o">(</span>defun exp1 <span class="o">()</span>
+<span class="go">           (print &quot;exp1 is evaluated&quot;))</span>
+<span class="go">EXP1</span>
+<span class="gp">CL@USER$</span> <span class="o">(</span>defun exp2 <span class="o">()</span>
+<span class="go">           (print &quot;exp2 is evaluated&quot;))</span>
+<span class="go">EXP2</span>
+<span class="gp">CL@USER$</span> <span class="o">(</span><span class="k">if </span>t
+<span class="go">             (exp1)</span>
+<span class="go">             (exp2))</span>
+
+<span class="go">&quot;exp1 is evaluated&quot; </span>
+</code></pre></div>
+
+
+<p></section></p>
+
+<p>As you can see, only the first expression was evaluated, because the <strong><code>if</code></strong> form prevents the immediate execution of the second expression. Instead, if we place both expressions in a form that executes them immediately:</p>
+
+<p><section class="shell"></p>
+
+<div class="highlight"><pre><code class="console"><span class="gp">CL@USER$</span> <span class="o">(</span>and <span class="o">(</span>exp1<span class="o">)</span> <span class="o">(</span>exp2<span class="o">))</span>
+
+<span class="go">&quot;exp1 is evaluated&quot; </span>
+<span class="go">&quot;exp2 is evaluated&quot; </span>
+</code></pre></div>
+
+
+<p></section></p>
+
+<p>This delay in evaluation is also what enables a form like <strong><code>or</code></strong> to exist, since <strong><code>or</code></strong> functions by checking for the returned value from a list of expressions or values. Because <strong><code>or</code></strong> only needs to verify one instance of <code>t</code> to be returned, it checks the list of expressions passed to it one by one until it finds a <code>t</code> or any value other than <code>nil</code> or <code>False</code> (in languages like Python). The expressions that are passed to it are not evaluated immediately because there is no need, only one needs to return a <code>t</code> for <strong><code>or</code></strong> itself to return a <code>t</code>.</p>
+
+<p>Let's see this in action with SBCL:</p>
+
+<p><section class="shell"></p>
+
+<div class="highlight"><pre><code class="console"><span class="gp">CL@USER$</span> <span class="o">(</span>defun exp2 <span class="o">()</span>
+<span class="go">           nil)</span>
+<span class="gp">CL@USER$</span> <span class="o">(</span>exp2<span class="o">)</span>
+<span class="go">NIL</span>
+<span class="gp">CL@USER$</span> <span class="o">(</span>macroexpand <span class="sb">`</span><span class="o">(</span>or <span class="o">(</span>exp1<span class="o">)</span> <span class="o">(</span>exp2<span class="o">)))</span>
+<span class="go">(LET ((#:G891 (EXP1)))</span>
+<span class="go">  (IF #:G891</span>
+<span class="go">      #:G891</span>
+<span class="go">      (OR (EXP2))))</span>
+<span class="go">T</span>
+<span class="gp">CL@USER$</span> <span class="o">(</span>or <span class="o">(</span>exp1<span class="o">)</span> <span class="o">(</span>exp2<span class="o">))</span>
+
+<span class="go">&quot;exp1 is evaluated&quot; </span>
+</code></pre></div>
+
+
+<p></section></p>
+
+<p>Here, with <code>macroexpand</code>, we can see exactly how the interpreter/compiler treats the <strong><code>or</code></strong> form. <strong><code>or</code></strong> in this case is a macro that expands into an <strong><code>if</code></strong> form. As we have shown above, <strong><code>if</code></strong> itself is implemented with lazy evaluation, by association so does <strong><code>or</code></strong>. If the first evaluation does not produce a <a href="http://en.wikipedia.org/wiki/Boolean_data_type">Boolean True</a>, then recursion takes place with another call to <strong><code>or</code></strong> and the remaining values passed as arguments.</p>
+
+<p>A better example would be to pass undefined functions. If the undefined function were evaluated, an error would occur:</p>
+
+<p><section class="shell"></p>
+
+<div class="highlight"><pre><code class="console"><span class="gp">CL@USER$</span> <span class="o">(</span>exp3<span class="o">)</span>
+
+<span class="go">; in: EXP3</span>
+<span class="go">;     (EXP3)</span>
+<span class="go">; </span>
+<span class="go">; caught STYLE-WARNING:</span>
+<span class="go">;   undefined function: EXP3</span>
+<span class="go">; </span>
+<span class="go">; compilation unit finished</span>
+<span class="go">;   Undefined function:</span>
+<span class="go">;     EXP3</span>
+<span class="go">;   caught 1 STYLE-WARNING condition</span>
+<span class="go">; Evaluation aborted on #&lt;UNDEFINED-FUNCTION EXP3 {1004F1C1A3}&gt;.</span>
+</code></pre></div>
+
+
+<p></section></p>
+
+<p>Yet, as we shall soon see, <strong><code>or</code></strong> will not evaluate the undefined function as long as a function that is placed before it in the arguments evalutes to <code>t</code>:</p>
+
+<p><section class="shell"></p>
+
+<div class="highlight"><pre><code class="console"><span class="gp">CL@USER$</span> <span class="o">(</span>macroexpand <span class="sb">`</span><span class="o">(</span>or <span class="o">(</span>exp1<span class="o">)</span> <span class="o">(</span>exp2<span class="o">)</span> <span class="o">(</span>exp3<span class="o">)</span> <span class="o">(</span>exp4<span class="o">)))</span>
+<span class="go">(LET ((#:G894 (EXP1)))</span>
+<span class="go">  (IF #:G894</span>
+<span class="go">      #:G894</span>
+<span class="go">      (OR (EXP2) (EXP3) (EXP4))))</span>
+<span class="go">T</span>
+<span class="gp">CL@USER$</span> <span class="o">(</span>or <span class="o">(</span>exp1<span class="o">)</span> <span class="o">(</span>exp2<span class="o">)</span> <span class="o">(</span>exp3<span class="o">)</span> <span class="o">(</span>exp4<span class="o">))</span>
+
+<span class="go">&quot;exp1 is evaluated&quot; </span>
+</code></pre></div>
+
+
+<p></section></p>
+
+<p>If we place the undefined function before a valid function:</p>
+
+<p><section class="shell"></p>
+
+<div class="highlight"><pre><code class="console"><span class="gp">CL@USER$</span> <span class="o">(</span>or <span class="o">(</span>exp3<span class="o">)</span> <span class="o">(</span>exp2<span class="o">)</span> <span class="o">(</span>exp1<span class="o">))</span>
+
+<span class="go">; in: OR (EXP3)</span>
+<span class="go">;     (EXP3)</span>
+<span class="go">; </span>
+<span class="go">; caught STYLE-WARNING:</span>
+<span class="go">;   undefined function: EXP3</span>
+<span class="go">; </span>
+<span class="go">; compilation unit finished</span>
+<span class="go">;   Undefined function:</span>
+<span class="go">;     EXP3</span>
+<span class="go">;   caught 1 STYLE-WARNING condition</span>
+<span class="go">; Evaluation aborted on #&lt;UNDEFINED-FUNCTION EXP3 {100537C653}&gt;.</span>
+</code></pre></div>
+
+
+<p></section></p>
+
+<h4>Case Study # 2: Costly Operations (and Large Data Sets)</h4>
+
+<p>Let's say that you have a program that shows all possible permutations of 4 sets of elements, but in reality only has to calculate one such set, the one that is chosen by the user. Without <strong>Lazy Evaluation</strong><code>\(^\text{TM}\)</code> all the permutations of all the sets would be calculated where only one such set need be, the one chosen by the user.</p>
+
+<p>Here is the cost in terms of resources and time of one such calculation, assuming that the set has 9 elements:</p>
+
+<p><section class="shell"></p>
+
+<div class="highlight"><pre><code class="console"><span class="gp">CL@USER$</span> <span class="o">(</span><span class="nb">time</span> <span class="o">(</span>permute <span class="err">&#39;</span><span class="o">(</span>1 2 3 4 5 6 7 8 9<span class="o">)))</span>
+<span class="go">Evaluation took:</span>
+<span class="go">  0.702 seconds of real time</span>
+<span class="go">  0.666622 seconds of total run time (0.366642 user, 0.299980 system)</span>
+<span class="go">  [ Run times consist of 0.507 seconds GC time, and 0.160 seconds non-GC time. ]</span>
+<span class="go">  95.01% CPU</span>
+<span class="go">  1,190,735,261 processor cycles</span>
+<span class="go">  124,387,952 bytes consed</span>
+</code></pre></div>
+
+
+<p></section></p>
+
+<p>So if you have code that looks like this....</p>
+
+<p><section class="code"></p>
+
+<div class="highlight"><pre><code class="cl"><span class="p">(</span><span class="nb">defun</span> <span class="nv">choose-one</span> <span class="p">()</span>
+  <span class="p">(</span><span class="k">let*</span> <span class="p">((</span><span class="nv">a</span> <span class="p">(</span><span class="nv">permute</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span> <span class="mi">6</span> <span class="mi">7</span> <span class="mi">8</span> <span class="mi">9</span><span class="p">)))</span>
+         <span class="p">(</span><span class="nv">b</span> <span class="p">(</span><span class="nv">permute</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">10</span> <span class="mi">11</span> <span class="mi">12</span> <span class="mi">13</span> <span class="mi">14</span> <span class="mi">15</span> <span class="mi">16</span> <span class="mi">17</span> <span class="mi">18</span> <span class="mi">19</span><span class="p">)))</span>
+         <span class="p">(</span><span class="nv">c</span> <span class="p">(</span><span class="nv">permute</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span> <span class="nv">d</span> <span class="nv">e</span> <span class="nv">f</span> <span class="nv">g</span> <span class="nv">h</span> <span class="nv">i</span><span class="p">)))</span>
+         <span class="p">(</span><span class="nv">d</span> <span class="p">(</span><span class="nv">permute</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">j</span> <span class="nv">k</span> <span class="nv">l</span> <span class="nv">m</span> <span class="nv">n</span> <span class="nv">o</span> <span class="nv">p</span> <span class="nv">q</span> <span class="nv">r</span><span class="p">)))</span>
+         <span class="p">(</span><span class="nv">results</span> <span class="p">(</span><span class="nb">list</span> <span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span> <span class="nv">d</span><span class="p">)))</span>
+    <span class="p">(</span><span class="nb">print</span> <span class="s">&quot;Choose one to permute (a, b, c, or d):&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="nb">format</span> <span class="no">t</span> <span class="s">&quot;~a&quot;</span> <span class="p">(</span><span class="nb">nth</span> <span class="p">(</span><span class="nb">read</span><span class="p">)</span> <span class="nv">results</span><span class="p">))))</span>
+</code></pre></div>
+
+
+<p></section></p>
+
+<p>... where all the sets are passed to <code>permute</code> <em>before</em> the user chooses one, you can just imagine what will happen to your system resources. The fact is, it's all pretty useless because we're interested in only one result.</p>
+
+<p><code>\(\ast\)</code><em>Actually the above code won't even run in my copy of SBCL, undoubtedly because the permute function, which I coded, is woefully inefficient, but this just shows what the consequence is of running expensive operations.</em></p>
+
+<p>How about if we apply lazy evaluation to the problem? Then the computer would only calculate the permutations once the value is referenced or called, therefore performing only one such calculation.</p>
+
+<p>We just make the permute functions lazy with the <code>lazy</code> function (this is not part of the ANSI Standard so you'll have to roll your own) and show the results with the <code>force</code> function.</p>
+
+<p><section class="code"></p>
+
+<div class="highlight"><pre><code class="cl"><span class="p">(</span><span class="nb">defun</span> <span class="nv">choose-one</span> <span class="p">()</span>
+  <span class="p">(</span><span class="k">let*</span> <span class="p">((</span><span class="nv">a</span> <span class="p">(</span><span class="nv">lazy</span> <span class="p">(</span><span class="nv">permute</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span> <span class="mi">6</span> <span class="mi">7</span> <span class="mi">8</span> <span class="mi">9</span><span class="p">))))</span>
+         <span class="p">(</span><span class="nv">b</span> <span class="p">(</span><span class="nv">lazy</span> <span class="p">(</span><span class="nv">permute</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">10</span> <span class="mi">11</span> <span class="mi">12</span> <span class="mi">13</span> <span class="mi">14</span> <span class="mi">15</span> <span class="mi">16</span> <span class="mi">17</span> <span class="mi">18</span> <span class="mi">19</span><span class="p">))))</span>
+         <span class="p">(</span><span class="nv">c</span> <span class="p">(</span><span class="nv">lazy</span> <span class="p">(</span><span class="nv">permute</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span> <span class="nv">d</span> <span class="nv">e</span> <span class="nv">f</span> <span class="nv">g</span> <span class="nv">h</span> <span class="nv">i</span><span class="p">))))</span>
+         <span class="p">(</span><span class="nv">d</span> <span class="p">(</span><span class="nv">lazy</span> <span class="p">(</span><span class="nv">permute</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">j</span> <span class="nv">k</span> <span class="nv">l</span> <span class="nv">m</span> <span class="nv">n</span> <span class="nv">o</span> <span class="nv">p</span> <span class="nv">q</span> <span class="nv">r</span><span class="p">))))</span>
+         <span class="p">(</span><span class="nv">results</span> <span class="p">(</span><span class="nb">list</span> <span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span> <span class="nv">d</span><span class="p">)))</span>
+    <span class="p">(</span><span class="nb">print</span> <span class="s">&quot;Choose one to permute (a, b, c, or d):&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="nb">time</span> <span class="p">(</span><span class="nv">force</span> <span class="p">(</span><span class="nb">nth</span> <span class="p">(</span><span class="nb">read</span><span class="p">)</span> <span class="nv">results</span><span class="p">)))))</span>
+</code></pre></div>
+
+
+<p></section></p>
+
+<p><section class="shell"></p>
+
+<div class="highlight"><pre><code class="console"><span class="gp">CL@USER$</span> <span class="o">(</span>choose-one<span class="o">)</span>
+
+<span class="go">&quot;Choose one to permute (a, b, c, or d):&quot; 0</span>
+
+<span class="go">Evaluation took:</span>
+<span class="go">  1.838 seconds of real time</span>
+<span class="go">  0.336644 seconds of total run time (0.319979 user, 0.016665 system)</span>
+<span class="go">  [ Run times consist of 0.163 seconds GC time, and 0.174 seconds non-GC time. ]</span>
+<span class="go">  18.34% CPU</span>
+<span class="go">  3,120,591,136 processor cycles</span>
+<span class="go">  124,460,000 bytes consed</span>
+</code></pre></div>
+
+
+<p></section></p>
+
+<p>So here the functions are not evaluated until the user chooses which permutation he wants, then the function tells the computer to do the calculation with the call to <code>force</code>. The code runs without problems and only one evaluation is done, conserving resources (and in this case, preventing a crash).</p>
+
+<p>This specific case actually occurs quite often in game AI code, where the AI has to generate a tree of all possible moves and rate them accordingly so it can decide how best to beat the player. Generating a list of all possible moves is incredible expensive, resource-wise, and also quite wasteful, as a majority of the moves calculated will never be made in the game.</p>
+
+<p>Take a chess opening move. The player can move any of his eight pawns, either one or two squares forward. Leaving the other pieces aside for now, this is a total of 16 possible moves. For each of these 16 possibilities, the AI then has to create another tree of possible moves based on each possible move. Say he only moves his pawns as well, he can move any of his eight pawns, one or two squares forward, for <strong>EACH</strong> of the possible moves done by the player. That's <code>\(16^3\)</code>, or 4096 possibilities! This quickly gets out of hand, and we're only taking about pawn movements for the first two turns! The clincher though is that only one move will be made, so all other calculated possibilities are thrown away as they are now irrelevant!</p>
+
+<p>The way around this is lazy evaluation, where the specific possibilities are calculated only once the player has made a specific move.</p>
+
+<h3>Implementing Lazy Functions</h3>
+
+<p>Several languages, such as <a href="http://www.haskell.org/haskellwiki/Haskell">Haskell</a> and <a href="http://clojure.org/">Clojure</a> have lazy evaluation built-in as the default behavior. Common Lisp however, does not, so if you want to take advantage of lazy data structures or lazy functions you have to roll your own implementation. Fortunately, this is easy to do.</p>
+
+<p>When you come down to it, lazy data structures or functions don't <em>hide</em> the result of execution or value, <em>it actually doesn't perform the calculation at all</em>. With this in mind, you can implement laziness by assigning the functions that you want to be lazy to variables. This is similar to what happens when you pass a function to another function as one of its arguments. The function that is passed is not called, but merely saved as an argument variable by the other function. To evaluate it, you have to use <code>funcall</code>, and only then does the interpreter call the function.</p>
+
+<p><section class="code"></p>
+
+<div class="highlight"><pre><code class="cl"><span class="p">(</span><span class="nb">defmacro</span> <span class="nv">lazy</span> <span class="p">(</span><span class="k">&amp;body</span> <span class="nv">body</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">value</span> <span class="p">(</span><span class="nb">gensym</span><span class="p">))</span>
+        <span class="p">(</span><span class="nv">forced</span> <span class="p">(</span><span class="nb">gensym</span><span class="p">)))</span>
+    <span class="o">`</span><span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="o">,</span><span class="nv">value</span> <span class="no">nil</span><span class="p">)</span>
+           <span class="p">(</span><span class="o">,</span><span class="nv">forced</span> <span class="no">nil</span><span class="p">))</span>
+       <span class="p">(</span><span class="k">lambda</span> <span class="p">()</span>
+         <span class="p">(</span><span class="nb">unless</span> <span class="o">,</span><span class="nv">forced</span>
+           <span class="p">(</span><span class="nb">setf</span> <span class="o">,</span><span class="nv">value</span> <span class="p">(</span><span class="k">progn</span> <span class="o">,@</span><span class="nv">body</span><span class="p">))</span>
+           <span class="p">(</span><span class="nb">setf</span> <span class="o">,</span><span class="nv">forced</span> <span class="no">t</span><span class="p">))</span>
+         <span class="o">,</span><span class="nv">value</span><span class="p">))))</span>
+</code></pre></div>
+
+
+<p></section></p>
+
+<p><code>\(\ast\)</code> <em>Implementation taken from Conrad Barski's Land of Lisp.</em></p>
+
+<p>So here you can see one possible implementation of the lazy paradigm. The macro <code>lazy</code> takes a series of expressions, usually the innards of a function, and saves those expressions under gensym of value. To evaluate the expressions, it must be called with <code>funcall</code>.</p>
+
+<p><section class="shell"></p>
+
+<div class="highlight"><pre><code class="console"><span class="gp">CL@USER$</span> <span class="o">(</span>defun add <span class="o">(</span>x y<span class="o">)</span>
+<span class="go">           (lazy (+ x y)))</span>
+<span class="go">ADD</span>
+<span class="gp">CL@USER$</span> <span class="o">(</span>add 1 2<span class="o">)</span>
+<span class="gp">#</span>&lt;CLOSURE <span class="o">(</span>LAMBDA <span class="o">()</span> :IN ADD<span class="o">)</span> <span class="o">{</span>1003F30A4B<span class="o">}</span>&gt;
+<span class="gp">CL@USER$</span> <span class="o">(</span>funcall <span class="o">(</span>add 1 2<span class="o">))</span>
+<span class="go">3</span>
+</code></pre></div>
+
+
+<p></section></p>
+
+<p>This way any recursion present in the function is not performed, giving you the ability to create and manage <em>infinite</em> data sets.</p>
+
+<p><section class="shell"></p>
+
+<div class="highlight"><pre><code class="console"><span class="go">CL-USER&gt; (defparameter *numbers*</span>
+<span class="go">           (labels ((f (n)</span>
+<span class="go">                      (cons n (lazy (f (1+ n))))))</span>
+<span class="go">             (f 1)))</span>
+<span class="go">*NUMBERS*</span>
+<span class="gp">CL@USER$</span> *numbers*
+<span class="go">(1 . #&lt;CLOSURE (LAMBDA # :IN F) {1002DA3AAB}&gt;)</span>
+<span class="gp">CL@USER$</span> <span class="o">(</span>funcall <span class="o">(</span>cdr *numbers*<span class="o">))</span>
+<span class="go">(2 . #&lt;CLOSURE (LAMBDA # :IN F) {1002FE572B}&gt;)</span>
+<span class="gp">CL@USER$</span> <span class="o">(</span>funcall <span class="o">(</span>cdr <span class="o">(</span>funcall <span class="o">(</span>cdr *numbers*<span class="o">))))</span>
+<span class="go">(3 . #&lt;CLOSURE (LAMBDA # :IN F) {10030FCCCB}&gt;)</span>
+</code></pre></div>
+
+
+<p></section></p>
+
+<p>As you can see, <code>*numbers*</code> returns a list with a number, and the un-evaluated recursion which adds 1 to the number. If this were implemented without the call to <code>lazy</code> when doing the recursion, it would loop infinitely until the stack was exhausted or terminated by the user.</p>
+
+<p>This way, you can create what amounts to an <em>infinite</em> list without exhausting the stack because the functions don't recurse <strong><em>until <code>funcall</code> is called on it.</em></strong> In effect, it's a stop sign for the function and <code>funcall</code> is the green light.</p>
+
+<h3>Consequences</h3>
+
+<p><strong>Lazy Evaluation</strong> is not without its downsides however, the biggest being a performance hit, as the computer now has to store a reference to the computation, and the result once the computation is done (this is called <em>memoization</em>, and is incredible useful if when used properly, but can be wasteful when not needed). As such, lazy evaluation should only be used when truly needed, as it can slow down code performance and create bottlenecks.</p>
+
+<h3>Further Reading</h3>
+
+<ul>
+<li><a href="http://existentialtype.wordpress.com/2011-04-24/the-real-point-of-laziness/">The Real Point of Laziness</a></li>
+<li><a href="http://www.stackoverflow.com/questions/7868507/non-trivial-lazy-evaluation/7868790#7868790">Non-Trivial Lazy Evaluation</a></li>
+</ul>
+
+
+    <h6>24 Sep 2012</h6>
+  </section>
+</section>
+
+
+
+  </div>
+  <footer>
+    <p>&#0169; Mozart Reina 2012 | All Rights Reserved. </p>
+  </footer>
+</body>
+</html>

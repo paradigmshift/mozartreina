@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset=utf-8 />
+  <title>  Rolling my own RC4 Implementation |  Mozart Reina </title>
+  <link rel="stylesheet" href="/css/styles.css" type="text/css" />
+  <link rel="stylesheet" href="/css/syntax.css" type="text/css" />
+  <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jsxgraph/0.93/jsxgraphcore.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://jsxgraph.uni-bayreuth.de/distrib/jsxgraph.css" />
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3/jquery.min.js"></script>
+  <script type="text/javascript" src="/scripts/menu.js"></script>
+  <script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    MathJax.Hub.Config({
+    tex2jax: {
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+    }
+    });
+    
+    MathJax.Hub.Queue(function() {
+    // Fix <code> tags after MathJax finishes running. This is a
+      // hack to overcome a shortcoming of Markdown. Discussion at
+      // https://github.com/mojombo/jekyll/issues/199
+      var all = MathJax.Hub.getAllJax(), i;
+      for(i = 0; i < all.length; i += 1) {
+                   all[i].SourceElement().parentNode.className += ' has-jax';
+                   }
+                   });
+  </script>
+  <script type="text/javascript">
+
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-33571143-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+
+  </script>
+</head>
+<body>
+  
+  <header id="top">
+    <h1> Math, Lisp, and general hackery </h1>
+  </header>
+
+  <div id="rss">
+    <a href="feed.xml">
+      <img src="/img/Feed-icon.svg"/>
+    </a>
+  </div>
+  
+  <nav role="navigation">
+    <ul id="menu">
+          <li><a href="/">Home</a>
+          <li><a href="/entries/">Entries</a></li>
+          <li><a href="/about/">About</a></li>
+    </ul>
+  </nav>
+ 
+  <div id="main">
+      <section id="content">
+  <h2> Rolling my own RC4 Implementation </h2>
+  <section class="text">
+    <h3>What is RC4</h3>
+
+<p>RC4, or the "Rivest Cipher", named after its creator Ron Rivest, is a popular stream cipher used in encryption protocols like <a href="http://en.wikipedia.org/wiki/Wired_Equivalent_Privacy">WEP</a> and <a href="http://en.wikipedia.org/wiki/Wi-Fi_Protected_Access">WPA</a>. A stream cipher is a system where plaintext is combined with a <em>cipher digit stream</em> (for us mortals, a group of, usually random, numbers) to create a "ciphertext" stream. The cipher digit stream is generated from a seed value, which also servers as the decryption key for the ciphertext stream.</p>
+
+<h3>Ok, so why are you creating your own implementation?</h3>
+
+<p>In the wake of the famous <a href="http://www.wired.com/gamelife/2011/05/sony-online-entertainment-hack/">Sony exploits</a>, as well as the breaching of <a href="http://www.pcworld.com/article/227268/lastpass_ceo_explains_possible_hack.html">LastPass</a> and the recent LinkedIn <a href="http://www.forbes.com/sites/reuvencohen/2012/06/06/linkedin-hacked-a-few-apps-suggestions-for-protecting-your-online-passwords/">break-ins</a>, the last few months has seen a growing interest in the field of cryptography and security in general.</p>
+
+<p>A few months ago on <a href="http://news.ycombinator.com">Hacker News</a> I read an article similar to <a href="http://lifehacker.com/5715794/how-to-write-down-and-encrypt-your-passwords-with-an-old+school-tabula-recta">this one</a> (can't find the original one anymore) that talked about choosing a passphrase based on the website or service you were logging into, and running a local encryption protocol on it and using that as your password. The obvious downside to this is that without the encryption program, you can't really log on to your account, which means that you're basically limited to using your own computer or putting up the encryption system on some web app so that you (<em>and anyone else....</em>) can always have access.</p>
+
+<p>I don't do this exactly for that reason, I usually log on to my email account from various computers and so this solution is not the ideal one for me. However it did get me interested in looking into how to roll your own implementation of some of the more well-known cipher algorithms and in cryptology in general. In the end this prompted me to do some research and understand how these algorithms work. My choice of the RC4 protocol was purely chance, it was one of the first ones I came across and it seemed simple enough to implement.</p>
+
+<p><a href="http://en.wikipedia.org/wiki/RC4">Wikipedia entry on RC4</a></p>
+
+<h3>Algorithm</h3>
+
+<p>The RC4 algorithm consists of two main parts: the key-scheduling algorithm (<strong>KSA</strong>) and pseudo-random generation algorithm (<strong>PRGA</strong>).</p>
+
+<p>The KSA is a permutation of all possible 256 bytes based on the key or passphrase which itself is from 40-128 bits long.</p>
+
+<p><strong>Pseudocode:</strong></p>
+
+<p><section class="code">
+<code>\(
+\large{ \text{for i from } 0 \mbox{ to } 255 \\
+{\rm ~~}S[i] := i \\
+\text{endfor} \\
+j := 0 \\
+\text{for i from } 0 \mbox{ to } 255 \\
+{\rm ~~}j:= (j + S[i] + \mbox{key}[i {\rm ~mod ~keylength}]) \mbox{ mod } 256 \\
+{\rm ~~swap ~values ~of ~} S[i] \mbox{ and } S[j] \\
+\text{endfor}}
+\)</code>
+</section></p>
+
+<p><strong>Lisp Implementation:</strong>
+  <section class="code"></p>
+
+<div class="highlight"><pre><code class="cl">  <span class="p">(</span><span class="nb">defun</span> <span class="nv">switch</span> <span class="p">(</span><span class="nv">a</span> <span class="nv">b</span> <span class="nv">lst</span><span class="p">)</span>
+  <span class="s">&quot;Switch elements at position a &amp; b with each other&quot;</span>
+    <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">newlst</span> <span class="p">(</span><span class="nb">copy-list</span> <span class="nv">lst</span><span class="p">)))</span>
+      <span class="p">(</span><span class="nb">psetf</span> <span class="p">(</span><span class="nb">nth</span> <span class="nv">a</span> <span class="nv">newlst</span><span class="p">)</span> <span class="p">(</span><span class="nb">nth</span> <span class="nv">b</span> <span class="nv">newlst</span><span class="p">)</span>
+             <span class="p">(</span><span class="nb">nth</span> <span class="nv">b</span> <span class="nv">newlst</span><span class="p">)</span> <span class="p">(</span><span class="nb">nth</span> <span class="nv">a</span> <span class="nv">newlst</span><span class="p">))</span>
+      <span class="nv">newlst</span><span class="p">))</span>
+
+  <span class="p">(</span><span class="nb">defun</span> <span class="nv">list-init</span> <span class="p">()</span>
+    <span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">from</span> <span class="mi">0</span> <span class="nv">to</span> <span class="mi">255</span>
+      <span class="nv">collect</span> <span class="nv">i</span><span class="p">))</span>
+
+  <span class="p">(</span><span class="nb">defun</span> <span class="nv">key-init</span> <span class="p">(</span><span class="nv">key</span><span class="p">)</span>
+    <span class="p">(</span><span class="k">let*</span> <span class="p">((</span><span class="nv">key-char</span> <span class="p">(</span><span class="nb">coerce</span> <span class="nv">key</span> <span class="ss">&#39;list</span><span class="p">))</span>
+           <span class="p">(</span><span class="nv">key-list</span> <span class="p">(</span><span class="nb">mapcar</span> <span class="nf">#&#39;</span><span class="nb">char-code</span> <span class="nv">key-char</span><span class="p">)))</span>
+      <span class="nv">key-list</span><span class="p">))</span>
+  
+</code></pre></div>
+
+
+<p>  </section></p>
+
+<p>The function <code>list-init</code> initializes a list with the elements 0 to 255, this is used to scramble the key. <code>key-init</code> takes the passphrase in the form of a string, creates a list from that string, then returns the numeric code representation of each element in the list (normally the result would be the binary representation of each element, in this case it is ASCII code). <code>switch</code> is the function responsible for swapping the list values with each other.</p>
+
+<p>  <section class="code"></p>
+
+<div class="highlight"><pre><code class="cl">  <span class="p">(</span><span class="nb">defun</span> <span class="nv">scramble</span> <span class="p">(</span><span class="nv">lst</span> <span class="nv">key-list</span><span class="p">)</span>
+    <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">j</span> <span class="mi">0</span><span class="p">))</span>
+      <span class="p">(</span><span class="nb">dotimes</span> <span class="p">(</span><span class="nv">n</span> <span class="mi">255</span><span class="p">)</span>
+        <span class="p">(</span><span class="k">setq</span> <span class="nv">j</span> <span class="p">(</span><span class="nb">mod</span> <span class="p">(</span><span class="nb">+</span> <span class="nv">j</span>
+                        <span class="p">(</span><span class="nb">nth</span> <span class="nv">n</span> <span class="nv">lst</span><span class="p">)</span>
+                        <span class="p">(</span><span class="nb">nth</span> <span class="p">(</span><span class="nb">mod</span> <span class="nv">n</span> <span class="p">(</span><span class="nb">length</span> <span class="nv">key-list</span><span class="p">))</span>
+                             <span class="nv">key-list</span><span class="p">))</span>
+                     <span class="p">(</span><span class="nb">length</span> <span class="nv">key-list</span><span class="p">)))</span>
+        <span class="p">(</span><span class="k">setq</span> <span class="nv">lst</span> <span class="p">(</span><span class="nv">switch</span> <span class="nv">n</span> <span class="nv">j</span> <span class="nv">lst</span><span class="p">)))</span>
+      <span class="nv">lst</span><span class="p">))</span>
+  
+</code></pre></div>
+
+
+<p>  </section></p>
+
+<p><code>scramble</code>, as the function name suggests, begins the permutation of the passphrase (the output of <code>key-init</code>) using the list (or array) initialized by <code>list-init</code>. Each iteration has an effect not only on the passphrase but also on the list that is used to determine the permutation.</p>
+
+<h3>A Simple Example</h3>
+
+<p><em>in this particular implementation the computation for <strong><code>j</code></strong> lacks one step, mod 256</em></p>
+
+<h4>First Iteration</h4>
+
+<p><code>\[
+\begin{array}{l}
+S = 0, 1, 2, 3 \\
+K = 1, 7, 1, 7 \\
+(i = 0, j = 0, S = 0, 1, 2, 3): \\
+j = (j + S[i] + K[i]) = 0 + 0 + 1 = 1 \\
+\mbox{Swap } S[i] \mbox{with } S[j] = S = 1, 0, 2, 3 \\
+\end{array}
+\]</code></p>
+
+<h4>Second Iteration</h4>
+
+<p><code>\[
+\begin{array}{l}
+(i = 1, j = 1, S = 1, 0, 2, 3) \\
+j = (j + S[i] + K[i]) = (1 + 0 + 7) = 0 \mbox{ mod } 4 \\
+\mbox{Swap } S[i] \mbox{with } S[j] = S = 0, 1, 2, 3 \\
+\end{array}
+\]</code></p>
+
+<h4>Third Iteration</h4>
+
+<p><code>\[
+\begin{array}{l}
+(i = 2, j = 0, S = 0, 1, 2, 3) \\
+j = (j + S[i] + K[i]) = (0 + 2 + 1) = 3 \\
+\mbox{Swap } S[i] \mbox{with } S[j] = S = 0, 1, 3, 2 \\
+\end{array}
+\]</code></p>
+
+<h4>Fourth Iteration</h4>
+
+<p><code>\[
+\begin{array}{l}
+(i = 3, j = 3, S = 0, 1, 3, 2) \\
+j = (j + S[i] + K[i]) = (3 + 2 + 7) = 0 \mbox { mod } 4 \\
+\mbox{Swap } S[i] \mbox{with } S[j] = S = 2, 1, 3, 0 \\
+\end{array}
+\]</code></p>
+
+<p>After the key is scrambled it is then used in the <strong>PRGA</strong> subroutine.</p>
+
+<h3>PRGA</h3>
+
+<p><strong>Pseudocode:</strong></p>
+
+<p><section class="code">
+<code>\(
+\large{ i := 0\\
+j := 0\\
+\text{while GeneratingOutput}: \\
+{\rm ~~~~} i := (i + 1) \mbox{ mod } 256\\
+{\rm ~~~~} j := (j + S[i]) \mbox{ mod } 256\\
+{\rm ~~~~} \text{ swap values of }S[i] \mbox{ and } S[j]\\
+{\rm ~~~~} K := S[(S[i] + S[j]) \mbox{ mod } 256] \\
+{\rm ~~~~} \mbox{output } K\\
+\text{endwhile}}
+\)</code>
+</section></p>
+
+<p>After each iteration of the loop, the resulting <strong><code>K</code></strong> is then <strong>XOR</strong>ed with one byte of the message, this progresses in a linear manner (so every time a new computation for <strong><code>K</code></strong> is done, the next byte of the message is <strong>XOR</strong>ed).</p>
+
+<p><strong>Lisp Implementation:</strong>
+<section class="code"></p>
+
+<div class="highlight"><pre><code class="cl">  <span class="p">(</span><span class="nb">defun</span> <span class="nv">output-generator</span> <span class="p">(</span><span class="nv">i</span> <span class="nv">j</span> <span class="nv">s</span> <span class="nv">msg</span> <span class="nv">result</span><span class="p">)</span>
+    <span class="p">(</span><span class="k">setq</span> <span class="nv">i</span> <span class="p">(</span><span class="nb">mod</span> <span class="p">(</span><span class="nb">+</span> <span class="nv">i</span> <span class="mi">1</span><span class="p">)</span> <span class="mi">256</span><span class="p">))</span>
+    <span class="p">(</span><span class="k">setq</span> <span class="nv">j</span> <span class="p">(</span><span class="nb">mod</span> <span class="p">(</span><span class="nb">+</span> <span class="nv">j</span> <span class="p">(</span><span class="nb">nth</span> <span class="nv">i</span> <span class="nv">s</span><span class="p">))</span> <span class="mi">256</span><span class="p">))</span>
+    <span class="p">(</span><span class="k">setq</span> <span class="nv">s</span> <span class="p">(</span><span class="nv">switch</span> <span class="p">(</span><span class="nb">nth</span> <span class="nv">i</span> <span class="nv">s</span><span class="p">)</span>
+                    <span class="p">(</span><span class="nb">nth</span> <span class="nv">j</span> <span class="nv">s</span><span class="p">)</span> <span class="nv">s</span><span class="p">))</span>
+    <span class="p">(</span><span class="nb">push</span> <span class="p">(</span><span class="nb">boole</span> <span class="nv">boole-xor</span> <span class="p">(</span><span class="nb">mod</span> <span class="p">(</span><span class="nb">+</span> <span class="p">(</span><span class="nb">nth</span> <span class="nv">i</span> <span class="nv">s</span><span class="p">)</span>
+                                   <span class="p">(</span><span class="nb">nth</span> <span class="nv">j</span> <span class="nv">s</span><span class="p">))</span>
+                                <span class="mi">256</span><span class="p">)</span>
+                 <span class="p">(</span><span class="nb">car</span> <span class="nv">msg</span><span class="p">))</span> <span class="nv">result</span><span class="p">)</span>
+    <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">&gt;</span> <span class="p">(</span><span class="nb">length</span> <span class="nv">msg</span><span class="p">)</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="p">(</span><span class="nv">output-generator</span> <span class="p">(</span><span class="nb">+</span> <span class="mi">1</span> <span class="nv">i</span><span class="p">)</span>
+                          <span class="p">(</span><span class="nb">+</span> <span class="mi">1</span> <span class="nv">j</span><span class="p">)</span>
+                          <span class="nv">s</span>
+                          <span class="p">(</span><span class="nb">subseq</span> <span class="nv">msg</span> <span class="mi">1</span><span class="p">)</span>
+                          <span class="nv">result</span><span class="p">)</span>
+        <span class="p">(</span><span class="nb">reverse</span> <span class="nv">result</span><span class="p">)))</span>
+  
+</code></pre></div>
+
+
+<p></section></p>
+
+<h3>Test Run</h3>
+
+<p>Using my Lisp implementation, here are some examples:</p>
+
+<p><em>passphrase: 123, text: 456</em>
+<section class="shell"></p>
+
+<div class="highlight"><pre><code class="console"><span class="gp">CL@USER$</span> <span class="o">(</span>code-decode <span class="s2">&quot;123&quot;</span> <span class="s2">&quot;456&quot;</span><span class="o">)</span>
+<span class="go">6Ë2</span>
+</code></pre></div>
+
+
+<p></section></p>
+
+<p><em>passphrase: 123, text: 890</em>
+<section class="shell"></p>
+
+<div class="highlight"><pre><code class="console"><span class="gp">CL@USER$</span> <span class="o">(</span>code-decode <span class="s2">&quot;123&quot;</span> <span class="s2">&quot;890&quot;</span><span class="o">)</span>
+<span class="go">:Ç4</span>
+</code></pre></div>
+
+
+<p></section></p>
+
+<h3>Wait a minute, what about decoding the stream?</h3>
+
+<p>Ciphering would be pretty useless if the decoding method didn't work... Let's see what happens when we apply the <strong>XOR</strong>ed ciphertext with the passphrase.</p>
+
+<p><em>passphrase: 123, ciphertext: 6Ë2</em>
+<section class="shell"></p>
+
+<div class="highlight"><pre><code class="console"><span class="gp">CL@USER$</span> <span class="o">(</span>code-decode <span class="s2">&quot;123&quot;</span> <span class="s2">&quot;6Ë2&quot;</span><span class="o">)</span>
+<span class="go">456</span>
+</code></pre></div>
+
+
+<p></section></p>
+
+<p><em>passphrase: 123, ciphertext: :Ç4</em>
+<section class="shell"></p>
+
+<div class="highlight"><pre><code class="console"><span class="gp">CL@USER$</span> <span class="o">(</span>code-decode <span class="s2">&quot;123&quot;</span> <span class="s2">&quot;:Ç4&quot;</span><span class="o">)</span>
+<span class="go">890</span>
+</code></pre></div>
+
+
+<p></section></p>
+
+<h3>Buggy Implementation, leave this type of stuff to the experts</h3>
+
+<p>My particular implementation has some notable sideffects, a lot of the times the ciphertext that is outputted contains non printable characters. I'm not quite sure if this is how it's meant to be or if it's a flaw in the code.</p>
+
+<p>This brings home an important point, encryption algorithms are best left to experienced mathematicians and engineers. Mathematicians because the algorithms can be quite complex; too simple and they are too vulnerable, and engineers because implementing the algorithms isn't quite that simple, the code itself has to be robust and be as immune as possible to attacks.</p>
+
+<p>Full <a href="https://github.com/paradigmshift/salt-n-pepper">source code</a> of my implementation. <em>Comments to the code are extremely welcome.</em></p>
+
+<p>As a side note, regarding your security online, I recommend <em>salting</em> your passwords. <a href="http://peebs.org/heres-how-to-salt-your-own-passwords-and-prev">How to Salt your Passwords</a> and <a href="http://www.readwriteweb.com/archives/avoiding-password-breaches-101-salt-your-hash.php">Avoiding Password Breaches</a> are a good read for those who don't know where to start.</p>
+
+    <h6>19 Jun 2012</h6>
+  </section>
+</section>
+
+
+
+  </div>
+  <footer>
+    <p>&#0169; Mozart Reina 2012 | All Rights Reserved. </p>
+  </footer>
+</body>
+</html>

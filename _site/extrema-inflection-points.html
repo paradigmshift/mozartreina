@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset=utf-8 />
+  <title>  Extrema and Inflection Points |  Mozart Reina </title>
+  <link rel="stylesheet" href="/css/styles.css" type="text/css" />
+  <link rel="stylesheet" href="/css/syntax.css" type="text/css" />
+  <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jsxgraph/0.93/jsxgraphcore.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://jsxgraph.uni-bayreuth.de/distrib/jsxgraph.css" />
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3/jquery.min.js"></script>
+  <script type="text/javascript" src="/scripts/menu.js"></script>
+  <script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    MathJax.Hub.Config({
+    tex2jax: {
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+    }
+    });
+    
+    MathJax.Hub.Queue(function() {
+    // Fix <code> tags after MathJax finishes running. This is a
+      // hack to overcome a shortcoming of Markdown. Discussion at
+      // https://github.com/mojombo/jekyll/issues/199
+      var all = MathJax.Hub.getAllJax(), i;
+      for(i = 0; i < all.length; i += 1) {
+                   all[i].SourceElement().parentNode.className += ' has-jax';
+                   }
+                   });
+  </script>
+  <script type="text/javascript">
+
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-33571143-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+
+  </script>
+</head>
+<body>
+  
+  <header id="top">
+    <h1> Math, Lisp, and general hackery </h1>
+  </header>
+
+  <div id="rss">
+    <a href="feed.xml">
+      <img src="/img/Feed-icon.svg"/>
+    </a>
+  </div>
+  
+  <nav role="navigation">
+    <ul id="menu">
+          <li><a href="/">Home</a>
+          <li><a href="/entries/">Entries</a></li>
+          <li><a href="/about/">About</a></li>
+    </ul>
+  </nav>
+ 
+  <div id="main">
+      <section id="content">
+  <h2> Extrema and Inflection Points </h2>
+  <section class="text">
+    <h3>As Usual, The Definitions Come First</h3>
+
+<p>We'll be using a few technical math terms, so let's define them first:</p>
+
+<ul>
+<li><h4>Extrema</h4>
+
+<p>Extrema are both the maximum and minimum values that a function takes at a point either within a certain domain (a subset of possible values) or the global domain (the entire set of possible values).</p></li>
+</ul>
+
+
+<div id="box1" class="jxgbox"></div>
+
+
+<script type="text/javascript">
+ var board = JXG.JSXGraph.initBoard('box1', {boundingbox: [-0.2, 7, 1.2, -6], axis:true});
+ var p1 = board.create('point', [0.1,6], {name:"Maxima"});
+ var p2 = board.create('point', [0.3,-3.15], {name:"Minima"});
+ board.create('functiongraph', [function(x){return Math.cos(3*3.14*x)/x;},0.1,1.1]);
+</script>
+
+
+<ul>
+<li><h4>Concave Upwards</h4>
+
+<p>A curve whose slope increases as <code>\(x\)</code> increases. Resembles an upright <strong>U</strong>.</p></li>
+</ul>
+
+
+<div id="box3" class="jxgbox"></div>
+
+
+<script type="text/javascript">
+ var board = JXG.JSXGraph.initBoard('box3', {boundingbox: [-5, 5, 5, -5], axis:true});
+ board.create('functiongraph', [function(x){return x*x;},-3,3]);
+</script>
+
+
+<ul>
+<li><h4>Concave Downwards</h4>
+
+<p>A curve whose slope decreases as <code>\(x\)</code> decreases. Resembles an upside-down <strong>U</strong>.</p></li>
+</ul>
+
+
+<div id="box4" class="jxgbox"></div>
+
+
+<script type="text/javascript">
+ var board = JXG.JSXGraph.initBoard('box4', {boundingbox: [-5, 5, 5, -5], axis:true});
+ board.create('functiongraph', [function(x){return -x*x;},-3,3]);
+</script>
+
+
+<ul>
+<li><h4>Inflection Points</h4>
+
+<p>The points in a curve where the slope changes from positive (concave upwards) to negative (concave downwards) and vice-versa. They are also called <strong>Undulation Points</strong>.</p></li>
+</ul>
+
+
+<div id="box2" class="jxgbox"></div>
+
+
+<script type="text/javascript">
+ var board = JXG.JSXGraph.initBoard('box2', {boundingbox: [-5, 10, 5, -5], axis:true});
+ var p1 = board.create('point', [0, 0], {name:"Inflection Point"});
+ board.create('functiongraph', [function(x){return x*x*x;},-3,5]);
+</script>
+
+
+<p>So basically <strong>Inflection Points</strong> are the places where the slope becomes either <strong>Concave Upwards</strong> from being <strong>Concave Downwards</strong> or the opposite; they are places where the rate of change of the <strong><em>slope itself</em></strong> changes from positive to negative or vice versa. <strong>Maxima</strong> and <strong>Minima</strong>, on the other hand, are the highest and lowest points where the rate of change of the curve, or <em>slope</em>, is 0.</p>
+
+<h3>How Do We Determine the Inflection Point?</h3>
+
+<p>So how do we calculate the Inflection Point of a curve? Eye-balling isn't really a scientific solution and isn't accurate.</p>
+
+<p>Here we will introduce the concept of the <a href="http://calculusapplets.com/secondderiv.html"><code>\(2^\text{nd}\)</code> Derivative</a>.</p>
+
+<p>The <code>\(2^\text{nd}\)</code> Derivative is the derivative of the derivative, or in plainspeak, the rate of change of the slope. The slope, if you will recall, is the rate of change of the curve, which can be both constant (as in a straight line) or not (concave or curving lines). In the case of a curving line, the <code>\(2^\text{nd}\)</code> Derivative is used to determine how much the curve of the line is changing.</p>
+
+<p>When using Lagrange's notation it is denoted as:
+<code>\[
+  \large{f''(x)}
+\]</code></p>
+
+<p>When we have a point in the curve that has a slope of 0, <code>\(f'(x) = 0\)</code>, then this is a possible <em>Inflection Point</em>. We then check by calculating the <code>\(2^\text{nd}\)</code> Derivative at the same point.</p>
+
+<p>But first, how to determine the <code>\(2^\text{nd}\)</code> Derivative? This is simply done, you just take <code>\(f'(x)\)</code> and take the derivative of that.</p>
+
+<p>For example, <code>\(f'(x)\)</code> of <code>\(f(x) = x^3\)</code> is <code>\(3x^2\)</code>. The derivative of <code>\(f'(x) = 3x^2\)</code> is <code>\(f''(x) = 6x\)</code>, you simply apply the derivative formula same formula to the <code>\(1^\text{st}\)</code> Derivative that you did to the original function.</p>
+
+<p>Once you have the <code>\(2^\text{nd}\)</code> Derivative, you then try to determine the <a href="http://www.cliffsnotes.com/study_guide/Critical-Points.topicArticleId-39909,articleId-39888.html">Critical Points</a>, or points where the slope of the curve is <code>\(0\)</code>.</p>
+
+<p>Continuing with our example:</p>
+
+<p><code>\(f(x) = x^3 \\
+f'(x) = 3x^2 \\
+f''(x) = 6x \)</code></p>
+
+<p><code>\(3x^2 = 0\)</code> when <code>\(x = 0\)</code>, so <code>\((0,0)\)</code> is a Critical Point and a possible candidate for the <em>Inflection Point</em>. To determine whether it is an Inflection Point or not, we then have to see if the same <code>\(x\)</code> value that was used to find the Critical Point (<code>\(x = 0\)</code>) also produces 0 when plugged into the <code>\(2^\text{nd}\)</code> Derivative formula.</p>
+
+<p><code>\(f''(x) = 0 \Rightarrow 6x = 0 \\
+x = 0 \)</code></p>
+
+<p>In this particular case, if there is an Inflection Point, it <strong>has</strong> to be at <code>\((0,0)\)</code> (this is because <code>\(x = 0\)</code> is the only value that results in 0 when plugged into the first and second derivative). Yet this isn't enough, the derivative of the slope must change on either side of the point for it to qualify as an Inflection Point. We have to take two points on either side of the point and determine their values.</p>
+
+<p><code>\(x = 1 \\
+f''(x) = 6(1) \rightarrow 6 \\
+x = -1 \\
+f''(x) = 6(-1) \rightarrow -6
+\)</code></p>
+
+<p>We can see that when we plug in 1, which is at the right side of 0, we get a positive result (6) and with -1, which is at the left side of 0, we get a negative result (-6). Hence, the point <code>\((0,0)\)</code> satisfies all the requirements for it to be considered an <em>Inflection Point</em>.</p>
+
+<div id="box5" class="jxgbox"></div>
+
+
+<script type="text/javascript">
+ var board = JXG.JSXGraph.initBoard('box5', {boundingbox: [-5, 5, 5, -5], axis:true});
+ var p1 = board.create('point', [0,0], {name:"Inflection Point"});
+ board.create('functiongraph', [function(x){return x*x*x;},-3,3]);
+</script>
+
+
+<p>What if there are no values that output 0 with both <code>\(f'(x)\)</code> and <code>\(f''(x)\)</code>? Does that mean that there is no Inflection Point?</p>
+
+<p>In fact there are cases where the Inflection Point is not found on a <a href="http://en.wikipedia.org/wiki/Stationary_point">stationary point</a>, we'll go into them later.</p>
+
+<p><strong>Inflection Points</strong></p>
+
+<ul>
+<li>Must result in 0 when plugged into <code>\(f''(x)\)</code>.</li>
+<li>Signs on either side of the point must be opposite to each other.</li>
+</ul>
+
+
+<h3>Finding the Minima and Maxima Points</h3>
+
+<p>We've discussed finding the Inflection Point(s) on a curve, now how about the <em>Minima</em> and <em>Maxima</em> points?</p>
+
+<p>Finding these points is easy, according to <a href="http://en.wikipedia.org/wiki/Fermat's_theorem_(stationary_points">Fermat's Theorem</a> they can only be located at Critical Points.</p>
+
+<p><code>\(\ast\)</code> <em>crickets chirping</em> <code>\(\ast\)</code></p>
+
+<p>Say what? They are located at Critical Points? But we just showed that <strong><em>Inflection Points</em></strong> are located at Critical Points! So how can the Minima and Maxima points be found there as well?</p>
+
+<p>Actually, like we mentioned before, Inflection Points <em>may</em> be located on <em>Critical Points</em> if the <code>\(x\)</code> value that was plugged into the <code>\(1^\text{st}\)</code> Derivative formula to obtain <code>\(0\)</code>, when plugged into the <code>\(2^\text{nd}\)</code> Derivative formula, <strong><em>also produces 0 along with a change in signs on either side of the point</em></strong>.</p>
+
+<p>As usual, this is best demonstrated with an example.</p>
+
+<p>Let's take the formula <code>\(f(x) = x^4-8x^2\)</code>.</p>
+
+<p><code>\(f'(x) = 4x^3 - 16x\\
+f''(x) = 12x^2 - 16 \)</code></p>
+
+<p>Now to find the Critical Points:</p>
+
+<p><code>\(f'(x) = 0 \Rightarrow 4x^3 - 16x = 0 \\
+4x(x^2-4) = 0 \\
+4x(x+2)(x-2) = 0 \\
+x = 0, 2, -2 \\
+x = (0,0), (-2, -16), (2, -16) \)</code></p>
+
+<div id="box6" class="jxgbox"></div>
+
+
+<script type="text/javascript">
+ var board = JXG.JSXGraph.initBoard('box6', {boundingbox: [-5, 5, 5, -20], axis:true});
+ var p1 = board.create('point', [0,0], {name:"Critical Point"});
+ var p2 = board.create('point', [-2,-16], {name:"Critical Point"});
+ var p3 = board.create('point', [2,-16], {name:"Critical Point"});
+ board.create();
+</script>
+
+
+<p>So these are the Critical Points, but are they all <strong><em>Inflection Points</em></strong>? Now we have to apply the <code>\(x\)</code> values to the <code>\(2^\text{nd}\)</code> Derivative:</p>
+
+<p><code>\(f''(x) = 12x^2 - 16 \\
+12(-2)^2 - 16 = 32 \\
+f''(x) = 12x^2 - 16 \\
+12(2)^2 - 16 = 32 \)</code></p>
+
+<p>Well, plugging in -2  and 2 both produced positive results, so the points <code>\((-2, -16), (2, -16)\)</code> <strong><em>are not</em></strong> an Inflection Points! What about <code>\((0,0)\)</code>?</p>
+
+<p><code>\(f''(x) = 12x^2 - 16 \\
+12(0)^2 - 16 = -16 \)</code></p>
+
+<p>Here the result is a negative number, still not 0, and therefore not an Inflection Point!</p>
+
+<p>So where does that leave the points <code>\((-2, -16), (2, -16)\)</code> and <code>\((0,0)\)</code>? These points are the <em>local</em> (or global depending on the domain of the function) <strong>Minima</strong> and <strong>Maxima</strong> Points, the points on the graph with the (relatively) highest and lowest values.</p>
+
+<h3>Non-Stationary Inflection Points</h3>
+
+<p>As we've seen in the previous example, there were no Critical Points that were Inflection Points. In this case, to determine the Inflection Point(s), we just set <code>\(f''(x)\)</code> to 0.</p>
+
+<p><code>\(f''(x) = 12x^2 - 16x \\
+12x^2 - 16x = 0 \\
+x^2 = \frac {16} {12} \\
+x = 1.1547 \)</code></p>
+
+<p>Now we test on either side of point 1.1547 to see if the signs change:</p>
+
+<p><code>\(x = 1.1547 + 0.1 \\
+12(1.2547)^2 - 16(1.2547) = 2.891 \\
+x = 1.1547 - 0.1 \\
+12(1.0547)^2 - 16(1.0547) = -3.526 \)</code></p>
+
+<p>So when we shift to the right the sign is positive so the curve is concave upwards, and when we shift to the left the sign is negative and so concave downwards.</p>
+
+<p>Conclusion? <code>\(x = 1.1547\)</code> is an Inflection Point!</p>
+
+<div id="box7" class="jxgbox"></div>
+
+
+<script type="text/javascript">
+ var board = JXG.JSXGraph.initBoard('box7', {boundingbox: [-5, 5, 5, -20], axis:true});
+ var p1 = board.create('point', [0,0], {name:"Maxima"});
+ var p2 = board.create('point', [-2,-16], {name:"Minima"});
+ var p3 = board.create('point', [2,-16], {name:"Minima"});
+ var p4 = board.create('point', [1.547,-13.412], {name:"Inflection Point"});
+ var p5 = board.create('point', [-1.547,-13.412], {name:"Inflection Point"});
+ board.create('functiongraph', [function(x){return x*x*x*x-8*(x*x);},-3,3]);
+</script>
+
+
+<p><code>\(\ast\)</code> <em><code>\(x = -1.1547\)</code> is also an Inflection Point, since <code>\(f''(-1.547) = 0\)</code></em>.</p>
+
+    <h6>11 Aug 2012</h6>
+  </section>
+</section>
+
+
+
+  </div>
+  <footer>
+    <p>&#0169; Mozart Reina 2012 | All Rights Reserved. </p>
+  </footer>
+</body>
+</html>
