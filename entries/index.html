@@ -7,12 +7,10 @@ title: Previously on mozartreina.com...
   <h2>Previously on mozartreina.com...</h2>
 </section>
 
-<ul class="entries">
+<div class="list-group">
   {% for post in site.posts %}
-  <li>
-    <a href="{{ post.url }}">
-    <h3>{{ post.title }}</h3>
+    <a href="{{ post.url }}" class="list-group-item entry-list">
+      {{ post.title }}
     </a>
-  </li>
   {% endfor %}
-</ul>
+</div>

@@ -1,4 +1,4 @@
 auto: true
 markdown: rdiscount
+highlighter: rouge
 permalink: /:title.html
-pygments: true

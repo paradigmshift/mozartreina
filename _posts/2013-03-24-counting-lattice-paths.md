@@ -6,16 +6,16 @@ title: Counting Lattice Paths
 ### First of all, what is a Lattice Point
 Lattice points are points in a [Point Lattice](http://mathworld.wolfram.com/PointLattice.html) where two or more gridlines intersect.
 
-<img class="centerimage" src="/img/LatticePoints_1000.gif"/>
+<img class="img-responsive center-block" src="/img/LatticePoints_1000.gif"/>
 *there is only one lattice point here, in the center, as that is the only point where the grid lines intersect*
 
 ### So what are Lattice Paths
 Lattice Paths are paths that lead from one lattice point to the next. 
 
-<img class="centerimage" src="/img/binomialpath1.png"/>
+<img class="img-responsive center-block" src="/img/binomialpath1.png"/>
 <section class="centertext">*two paths, from the leftmost corner to the rightmost, through a 1x1 lattice*</section>
 
-<img class="centerimage" src="/img/binomialpath2.png"/>
+<img class="img-responsive center-block" src="/img/binomialpath2.png"/>
 <section class="centertext">*six paths through a 2x2 lattice*</section>
 
 ### Counting the number of possible paths from a starting point to an endpoint
@@ -23,13 +23,13 @@ So how would one, given the need or want, go about counting the number of possib
 
 Here, the solution is derived by counting the number of paths it takes to get to adjacent points and adding them together.
 
-<img class="centerimage" src="/img/binomialpaths4.png"/>
+<img class="img-responsive center-block" src="/img/binomialpaths4.png"/>
 
 All points from the rightmost side to the top and bottom take 1 step to reach, so they are marked with one. The next point, diagonal to the rightmost point, takes 2 steps, because each point adjacent to it (the premise is that from the start point, you can only go towards the right, NE or SE) takes one step to get to. The point diagonal to that one, going towards the endpoint, takes 6 steps because the points adjacent to it both take 3 steps, and so on.
 
 Now this is a great solution but to use it effectively when dealing with large lattices we will have to come up with a program that can do the counting for us. Even a small 4x4 grid contains 70 possible paths, it would be ridiculous for us not to use a computer to do this repetitive task (not to mention that computers are far more accurate and are not prone to *"human error"*).
 
-<img class="centerimage" src="/img/binomialpath4.png" />
+<img class="img-responsive center-block" src="/img/binomialpath4.png" />
 
 ### Translating the method into code
 So the method's premise is counting the all paths that have 1 step and working from there to come up with all points that require 2 steps, and from there to 3 steps and so on. How would this translate to code?

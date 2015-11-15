@@ -13,8 +13,8 @@ The methods (and code) discussed here are based on a chapter of Peter
 Norvig's [Paradigms of Artificial Intelligence Programming](http://norvig.com/paip.html), those
 of you who have read PAIP will find much of the code familiar.
 
-<img class="centerimage" src="/img/binary-tree.gif" />
-<p class="centertext">A Binary Tree</p>
+<img class="img-responsive center-block" src="/img/binary-tree.gif" />
+<h4 class="text-center">A Binary Tree</h4>
 
 ### A Problem of Search
 The abundance of these objects, and the way they are put to use, mean
@@ -76,7 +76,7 @@ the successive node is not the goal, then it will check only one of
 successors of each node until it has reached the end of the tree,
 wherein it will go back and look at the second successor and repeat the process.
 
-<img class="centerimage" src="/img/dps.png" style="width:250px"/>
+<img class="img-responsive center-block" src="/img/dps.png" style="width:250px"/>
 
 This can be easily implemented with the `append` function, where we
 take the successive nodes from the current state and append them to
@@ -146,7 +146,7 @@ So for node 1 that has as its successors node 2 and node 3, it will
 check both nodes before checking their successors, nodes 4, 5, 6,
 and 7.
 
-<img src="/img/BFS.gif" class="centerimage" style="width:250px" />
+<img src="/img/BFS.gif" class="img-responsive center-block" style="width:250px" />
 
 <section class="code">
 {% highlight cl %}
