@@ -75,36 +75,36 @@ So the functions and internal workings of the project will be put in `my-tools.l
 
 <section class="code">
 {% highlight cl %}
-    (defun switch (a b lst)
-      "Switch elements at position a & b with each other"
-      (let ((newlst (copy-list lst)))
-        (psetf (nth a newlst) (nth b newlst)
-               (nth b newlst) (nth a newlst))
-        newlst))
+(defun switch (a b lst)
+  "Switch elements at position a & b with each other"
+  (let ((newlst (copy-list lst)))
+    (psetf (nth a newlst) (nth b newlst)
+           (nth b newlst) (nth a newlst))
+    newlst))
 
-    (defun permute (lst)
-      ;; reduces the results from start-algo function
-      (let ((final nil))
-        (mapcar (lambda (x)
-                  (if (= (length x) (length lst))
-                      (push x final)))
-                (start-algo lst))
-        final))
+(defun permute (lst)
+  ;; reduces the results from start-algo function
+  (let ((final nil))
+    (mapcar (lambda (x)
+              (if (= (length x) (length lst))
+                  (push x final)))
+            (start-algo lst))
+    final))
 
-    (defun start-algo (lst)  
-      (let ((container nil))
-        (push (list (car lst) (cadr lst)) container)
-        (push (switch 0 1 (car container)) container)
-        (setf lst (cddr lst))
-        (dotimes (n (length lst))
-          (mapcar (lambda (x)
-                    (setf x (push (car lst) x))
-                    (push x container)
-                    (dotimes (i (1- (length x)))
-                      (push (switch i (1+ i) (car container)) container)))
-                  container)
-          (setf lst (cdr lst)))
-        container))
+(defun start-algo (lst)  
+  (let ((container nil))
+    (push (list (car lst) (cadr lst)) container)
+    (push (switch 0 1 (car container)) container)
+    (setf lst (cddr lst))
+    (dotimes (n (length lst))
+      (mapcar (lambda (x)
+                (setf x (push (car lst) x))
+                (push x container)
+                (dotimes (i (1- (length x)))
+                  (push (switch i (1+ i) (car container)) container)))
+              container)
+      (setf lst (cdr lst)))
+    container))
 {% endhighlight %}
 </section>
 
@@ -116,10 +116,10 @@ So now that we have the code in `my-tools.lisp`, what about the other files? `RE
 
 <section class="code">
 {% highlight cl %}
-    ;;;; package.lisp
+;;;; package.lisp
 
-    (defpackage #:my-tools
-      (:use #:cl))
+(defpackage #:my-tools
+  (:use #:cl))
 {% endhighlight %}
 </section>
 
@@ -129,12 +129,12 @@ Now on to `my-tools.asd`. This is the file that describes to ASDF what the proje
 
 <section class="code">
 {% highlight cl %}
-    ;;;; my-tools.asd
+;;;; my-tools.asd
 
-    (asdf:defsystem #:my-tools
-      :serial t
-      :components ((:file "package")
-                   (:file "my-tools")))
+(asdf:defsystem #:my-tools
+  :serial t
+  :components ((:file "package")
+               (:file "my-tools")))
 {% endhighlight %}
 </section>
 
@@ -142,13 +142,13 @@ If we want to call an external library, for example [Drakma](http://weitz.de/dra
 
 <section class="code">
 {% highlight cl %}
-    ;;;; my-tools.asd
+;;;; my-tools.asd
 
-    (asdf:defsystem #:my-tools
-      :serial t
-      :depends-on (#:drakma)
-      :components ((:file "package")
-                   (:file "my-tools")))
+(asdf:defsystem #:my-tools
+  :serial t
+  :depends-on (#:drakma)
+  :components ((:file "package")
+               (:file "my-tools")))
 {% endhighlight %}
 </section>
 
@@ -206,11 +206,11 @@ CL@USER$ (permute '(1 2 3 4))
 
 <section class="code">
 {% highlight cl %}
-    ;;;; package.lisp
+;;;; package.lisp
 
-    (defpackage #:my-tools
-      (:use #:cl)
-      (:export #:permute))
+(defpackage #:my-tools
+  (:use #:cl)
+  (:export #:permute))
 {% endhighlight %}
 </section>
 
@@ -245,15 +245,15 @@ To load your individual files at the time that the system is called, you update 
 
 <section class="code">
 {% highlight cl %}
-    (asdf:defsystem #:my-tools
-      :serial t
-      :depends-on (#:drakma)
-      :components ((:file "urls")
-                   (:file "models")
-                   (:file "views")
-                   (:file "init")
-                   (:file "package")
-                   (:file "my-tools")))
+(asdf:defsystem #:my-tools
+  :serial t
+  :depends-on (#:drakma)
+  :components ((:file "urls")
+               (:file "models")
+               (:file "views")
+               (:file "init")
+               (:file "package")
+               (:file "my-tools")))
 {% endhighlight %}
 </section>
 
@@ -267,13 +267,13 @@ You can do this by specifying the wanted library/project/system when you create 
 
 <section class="shell">
 {% highlight console %}
-CL@USER$ (quickproject:make-project "~/dev/lisp/my-cms/"
-                      :depends-on '(aserve))
-"my-cms"
-CL@USER$
-CL@USER$ (net.aserve:start :port 8000)
-#<NET.ASERVE:WSERVER port 8000 {1002C5F453}>
-CL@USER$
+ CL@USER$ (quickproject:make-project "~/dev/lisp/my-cms/"
+                       :depends-on '(aserve))
+ "my-cms"
+ CL@USER$
+ CL@USER$ (net.aserve:start :port 8000)
+ #<NET.ASERVE:WSERVER port 8000 {1002C5F453}>
+ CL@USER$
 {% endhighlight %}
 </section>
 

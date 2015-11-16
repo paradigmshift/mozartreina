@@ -65,7 +65,6 @@ In the previous example, we tried to add together a number (1) and a variable `a
 ### Backtraces
 Backtraces, as mentioned earlier, are a record of the code being evaluated by the compiler up until it encounters an error and cannot continue. While most of it is incomprehensible to all except a very select few...
 
-<section class="shell">
     Backtrace:
       0: (SB-KERNEL::OBJECT-NOT-TYPE-ERROR-HANDLER ..)
           Locals:
@@ -79,7 +78,6 @@ Backtraces, as mentioned earlier, are a record of the code being evaluated by th
             SB-DEBUG::ARG-1 = :<NOT-AVAILABLE>
       2: ("foreign function: #x418B2F")
           [No Locals]
-</section>
 *Backtrace with all variables exposed*
 
 ...there is very useful information that can be gleaned from them. One of the most important things that can be retrieved are the values of variables at each stage of the execution.
@@ -140,17 +138,16 @@ The Inspector is a tool that is used to determine the current status of a data s
 
 <section class="shell">
 {% highlight console %}
-CL@USER$ (defclass foo () (a  b c))
-#<STANDARD-CLASS FOO>
-CL@USER$ (make-instance *)
-#<FOO {100426DEE3}>
-CL@USER$
+ CL@USER$ (defclass foo () (a  b c))
+ #<STANDARD-CLASS FOO>
+ CL@USER$ (make-instance *)
+ #<FOO {100426DEE3}>
+ CL@USER$
 {% endhighlight %}
 </section>
 
 Enter the Inspector with `C-c I` and enter `*` when asked for the value to inspect (this tells the inspector to inspect the latest value evaluated by the REPL). You should be presented with the following output.
 
-<section class="shell">
     #<FOO {100426DEE3}>
     --------------------
     Class: #<STANDARD-CLASS FOO>
@@ -164,11 +161,9 @@ Enter the Inspector with `C-c I` and enter `*` when asked for the value to inspe
     [ ]  C = #<unbound>
 
     [set value]  [make unbound]
-</section>
 
 As you can see there is a short description of the object at the top and summary of the current state. You can select the slots and either change or clear the bound values. Set the value of slot `A` to 45, for example, then go back to the REPL and verify that the change has been implemented.
 
-<section class="shell">
     #<FOO {100426DEE3}>
     --------------------
     Class: #<STANDARD-CLASS FOO>
@@ -182,7 +177,6 @@ As you can see there is a short description of the object at the top and summary
     [ ]  C = #<unbound>
 
     [set value]  [make unbound]
-</section>
 
 <section class="shell">
 {% highlight console %}
@@ -197,17 +191,16 @@ You can see that the instance of class `foo` that we modified in the debugger ha
 Another great way to debug code, and one which until recently I've always one manually, is to step through the code, inspecting the variables at each point. An easy way to do this is to add a [break point](http://en.wikipedia.org/wiki/Breakpoint), this is triggered by inserting `(break)` at the point in the source where you want to inspect the current state. Using the previously defined function `test`, we add `(break)` just before we call the function recursively. This will allow us to see what happens to the variable `lst` as we call the function again and again.
 
 <section class="code">
-  {% highlight cl %}
-    (defun test (lst)
-      (print (+ (car lst) (cadr lst)))
-      (break)
-      (test (cdr lst)))
-  {% endhighlight %}
+{% highlight cl %}
+(defun test (lst)
+  (print (+ (car lst) (cadr lst)))
+  (break)
+  (test (cdr lst)))
+{% endhighlight %}
 </section>
 
 This will produce the following response from the debugger:
 
-<section class="shell">
     break
        [Condition of type SIMPLE-CONDITION]
 
@@ -224,11 +217,9 @@ This will produce the following response from the debugger:
             SB-DEBUG::ARG-0 = (1 2 3 4 5)
       2: (SB-INT:SIMPLE-EVAL-IN-LEXENV (TEST '(1 2 3 4 5)) #<NULL-LEXENV>)
       3: (EVAL (TEST '(1 2 3 4 5)))
-</section>
 
 As we can see from the top description, the debugger was invoked by the `break` statement. We can then inspect the local variables at `1: (TEST (1 2 3 4 5))` and see that the function `test` was evaluated with the list `(1 2 3 4 5)`. We can then continue stepping through the code by either choosing **`0`** from the restart options displayed or by pressing **`s`**. The second iteration of the function will then give us:
 
-<section class="shell">
     break
        [Condition of type SIMPLE-CONDITION]
 
@@ -243,11 +234,9 @@ As we can see from the top description, the debugger was invoked by the `break` 
       1: (TEST (2 3 4 5))
           Locals:
             SB-DEBUG::ARG-0 = (2 3 4 5)
-</section>
 
 This is almost exactly the same as the previous message, except that the values which are passed onto the function are now `(2 3 4 5)` instead of `(1 2 3 4 5)`. This is because our function chops off the first element of the list each time it calls itself. As you continue stepping through, you can observe as the function will continue to truncate the arguments.
 
-<section class="shell">
     Backtrace:
       0: (BREAK "break")
       1: (TEST (3 4 5))
@@ -269,7 +258,6 @@ This is almost exactly the same as the previous message, except that the values 
           Locals:
             SB-DEBUG::ARG-0 = (5)
     
-</section>
 
 ### Learning more
 We've only just scratched the surface of using the debugger, there are many more techniques and features that are discussed elsewhere. I suggest reading the *slime* section of the [lisp-book](http://lisp-book.org), as well as the [SLDB chapter of the Slime manual](http://common-lisp.net/project/slime/doc/html/Debugger.html#Debugger) for a more complete list of commands available. 

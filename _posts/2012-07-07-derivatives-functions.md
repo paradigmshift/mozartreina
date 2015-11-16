@@ -15,9 +15,9 @@ A derivative of a function, in plainspeak, is the rate of change between points 
 
 The derivative in this case is the difference between the two points, also called the [slope](http://www.purplemath.com/modules/slope.htm), which is calculated with the following formula:
 
-`\[
+$$
 \large{m = \frac{y_2 - y_1} {x_2-x_1}} \\
-\]`
+$$
 
 In this example that would be `\(\frac {16 - 4} {4 - 2} = \frac {12} 2 = 6 \)`. The rate of change between the two points is 6... with one caveat. Since the derivative was derived from two points, it is only accurate when used with these two points. The farther you get from these two points, the less accurate the slope becomes.
 
@@ -54,9 +54,9 @@ There are several notations in use for representing derivatives.
 [Newton](http://en.wikipedia.org/wiki/Isaac_Newton) used *dot notation*, which involves placing a dot over the dependent variable as seen in `\(\dot y = \frac {dy} {dt}\)`.
 
 The formula for deriving the derivative of a function has to calculate the rate of change between the points in the graphed function. The standard formula is:
-`\[
+$$
 f'(x) = \frac {f(x + e) - f(x)} e
-\]`
+$$
 This is actually exactly the same as the slope formula presented above. `\(f(x + e)\)` is nothing more than `\(y_2\)`, where `\(e\)` is the difference between `\(y_1\)` and `\(y_2\)` therefore `\(y_1 + e = y_2\)` (when the variable `\(x\)` is plugged into the function, `\(y\)` comes out the other end). The bottom part of the equation has been simplified, in it's full form it would read `\(\frac {f(x + e) - f(x)} {(x + e) - x}\)`. Canceling the positive and negative `\(x\)` leaves just `\(e\)`.
 
 #### Example
@@ -85,17 +85,17 @@ A short example is in order to demonstrate this idea. Say `\(L = 5\)` and `\(C =
 
 So we say that as `\(x\)` approaches the value `\(L\)`, the statement `\(f(x) = L\)` becomes true. The notation for a limit is `\(\lim\limits_{x\rightarrow c}\)`, where `\(x\)` is approaching `\(c\)`. The complete expression of the above example would be:
 
-`\[
+$$
 \lim_{x\rightarrow C}f(x) = L
-\]`
+$$
 
 So now that we have defined limits, how do they apply to differentiation?
 
 Remember that `\(e\)` is the *distance* or *difference* between two points, but since we aren't solving for the difference between specific points but for the rate of change at *any* point, the solution here is to introduce a limit wherein we state that as `\(e\)` approaches `\(0\)` (when `\(e = 0\)` there is only one point), the equation becomes accurate.
 
-`\[
+$$
 f'(x) = \lim_{e\rightarrow 0} 2x + e \\
-\]`
+$$
 
 So going back to our equation:
 
@@ -106,15 +106,15 @@ f'(x) = 2x
 ### One more?
 Let's do one more example to make sure that we understand how derivatives work. 
 
-`\[
+$$
 f(x) = 20\sqrt x, x = 4
-\]`
+$$
 
 We are looking for the tangent line at the given `\(x\)` coordinate. This means that we will calculate the derivative (remember that the derivative is just another name for the slope), then plug it into the equation for tangent lines:
 
-`\[
+$$
 y = k(x - a) + f(a)
-\]`
+$$
 
 *`\(k\)` is the slope, and `\(a\)` is the given `\(x\)` coordinate.*
 

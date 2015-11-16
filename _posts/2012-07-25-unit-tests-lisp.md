@@ -2,7 +2,7 @@
 layout: post
 title: Unit Testing in Common Lisp
 ---
-### A Little about the History of Testing in Software Development
+### The History of Testing in Software Development
 According to the [wikipedia entry on testing](http://en.wikipedia.org/wiki/Software_testing#History), testing, or writing unit-tests, sprung from a desire to formally separate debugging (which can be described as "fixing" errors *when they appear*) from assertion or verification (making sure that the code is correct). 
 
 Whereas debugging can be seen as a reactive practice, *testing* is seen as a proactive method in which you don't wait for a bug to show up but actively try to produce one. This can be seen in the [work](http://www.amazon.com/The-Software-Testing-Glenford-Myers/dp/0471043281) of [Glenford Myers](http://en.wikipedia.org/wiki/Glenford_Myers), who emphasized *breakage testing*, or "a successful test is one that finds a bug".
@@ -23,13 +23,12 @@ CL@USER$ (ql:quickload "lisp-unit")
       Load 1 ASDF system:
         lisp-unit
     ; Loading "lisp-unit"
-
-    ("lisp-unit")
 {% endhighlight %}
 </section>
 
 ### Usage
 Tests are defined with `define-test`:
+
 <section class="code">
 **(define-test `\(\mbox{name exp}_1\mbox{ exp}_2\)`...)**
 </section>
@@ -131,9 +130,9 @@ CL@USER$ (defpackage :my-package
            (:use :cl)
            (:export #:my-func-1
                     #:my-func-2))
-#<PACKAGE "MY-PACKAGE">
+    #<PACKAGE "MY-PACKAGE">
 CL@USER$ (in-package :my-package)
-#<PACKAGE "MY-PACKAGE">
+    #<PACKAGE "MY-PACKAGE">
 MY-PACKAGE> (defun my-func-1 (x)
               .....
             (defun my-func-2 (y)
@@ -145,18 +144,18 @@ Then you can define the testing package in this manner:
 
 <section class="shell">
 {% highlight console %}
-CL@USER$ (defpackage :my-package-tests
-           (:use :cl :lisp-unit :my-package))
-#<PACKAGE "MY-PACKAGE-TESTS">
-CL@USER$ (in-package :my-package-tests)
-#<PACKAGE "MY-PACKAGE-TESTS">
-MY-PACKAGE-TESTS> (define-test my-test
-                    (dotimes (i 10)
-                      (assert-equal i (my-func-1 i))))
-MY-TEST
-MY-PACKAGE-TESTS> (run-tests)
-MY-TEST: 10 assertions passed, 0 failed.
-; No value
+ CL@USER$ (defpackage :my-package-tests
+            (:use :cl :lisp-unit :my-package))
+ #<PACKAGE "MY-PACKAGE-TESTS">
+ CL@USER$ (in-package :my-package-tests)
+ #<PACKAGE "MY-PACKAGE-TESTS">
+ MY-PACKAGE-TESTS> (define-test my-test
+                     (dotimes (i 10)
+                       (assert-equal i (my-func-1 i))))
+ MY-TEST
+ MY-PACKAGE-TESTS> (run-tests)
+ MY-TEST: 10 assertions passed, 0 failed.
+ ; No value
 {% endhighlight %}
 </section>
 

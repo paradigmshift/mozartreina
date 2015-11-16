@@ -25,7 +25,6 @@ The KSA is a permutation of all possible 256 bytes based on the key or passphras
 
 **Pseudocode:**
 
-<section class="code">
 `\(
 \large{ \text{for i from } 0 \mbox{ to } 255 \\
 {\rm ~~}S[i] := i \\
@@ -36,45 +35,40 @@ j := 0 \\
 {\rm ~~swap ~values ~of ~} S[i] \mbox{ and } S[j] \\
 \text{endfor}}
 \)`
-</section>
 
 **Lisp Implementation:**
-  <section class="code">
-  {% highlight cl %}
-  (defun switch (a b lst)
-  "Switch elements at position a & b with each other"
-    (let ((newlst (copy-list lst)))
-      (psetf (nth a newlst) (nth b newlst)
-             (nth b newlst) (nth a newlst))
-      newlst))
+{% highlight cl %}
+(defun switch (a b lst)
+"Switch elements at position a & b with each other"
+  (let ((newlst (copy-list lst)))
+    (psetf (nth a newlst) (nth b newlst)
+           (nth b newlst) (nth a newlst))
+    newlst))
 
-  (defun list-init ()
-    (loop for i from 0 to 255
-      collect i))
+(defun list-init ()
+  (loop for i from 0 to 255
+    collect i))
 
-  (defun key-init (key)
-    (let* ((key-char (coerce key 'list))
-           (key-list (mapcar #'char-code key-char)))
-      key-list))
-  {% endhighlight %}
-  </section>
+(defun key-init (key)
+  (let* ((key-char (coerce key 'list))
+         (key-list (mapcar #'char-code key-char)))
+    key-list))
+{% endhighlight %}
 
 The function `list-init` initializes a list with the elements 0 to 255, this is used to scramble the key. `key-init` takes the passphrase in the form of a string, creates a list from that string, then returns the numeric code representation of each element in the list (normally the result would be the binary representation of each element, in this case it is ASCII code). `switch` is the function responsible for swapping the list values with each other.
 
-  <section class="code">
-  {% highlight cl %}
-  (defun scramble (lst key-list)
-    (let ((j 0))
-      (dotimes (n 255)
-        (setq j (mod (+ j
-                        (nth n lst)
-                        (nth (mod n (length key-list))
-                             key-list))
-                     (length key-list)))
-        (setq lst (switch n j lst)))
-      lst))
-  {% endhighlight %}
-  </section>
+{% highlight cl %}
+(defun scramble (lst key-list)
+  (let ((j 0))
+    (dotimes (n 255)
+      (setq j (mod (+ j
+                      (nth n lst)
+                      (nth (mod n (length key-list))
+                           key-list))
+                   (length key-list)))
+      (setq lst (switch n j lst)))
+    lst))
+{% endhighlight %}
 
 `scramble`, as the function name suggests, begins the permutation of the passphrase (the output of `key-init`) using the list (or array) initialized by `list-init`. Each iteration has an effect not only on the passphrase but also on the list that is used to determine the permutation.
 
@@ -82,16 +76,16 @@ The function `list-init` initializes a list with the elements 0 to 255, this is 
 *in this particular implementation the computation for **`j`** lacks one step, mod 256*
 
 #### First Iteration
+
 `\[
 \begin{array}{l}
 S = 0, 1, 2, 3 \\
-K = 1, 7, 1, 7 \\
+K = 1, 7, 1, 7  \\
 (i = 0, j = 0, S = 0, 1, 2, 3): \\
 j = (j + S[i] + K[i]) = 0 + 0 + 1 = 1 \\
 \mbox{Swap } S[i] \mbox{with } S[j] = S = 1, 0, 2, 3 \\
 \end{array}
-\]`  
-
+\]`
 
 #### Second Iteration
 `\[
@@ -143,26 +137,24 @@ j := 0\\
 After each iteration of the loop, the resulting **`K`** is then **XOR**ed with one byte of the message, this progresses in a linear manner (so every time a new computation for **`K`** is done, the next byte of the message is **XOR**ed).
 
 **Lisp Implementation:**
-<section class="code">
-  {% highlight cl %}
-  (defun output-generator (i j s msg result)
-    (setq i (mod (+ i 1) 256))
-    (setq j (mod (+ j (nth i s)) 256))
-    (setq s (switch (nth i s)
-                    (nth j s) s))
-    (push (boole boole-xor (mod (+ (nth i s)
-                                   (nth j s))
-                                256)
-                 (car msg)) result)
-    (if (> (length msg) 1)
-        (output-generator (+ 1 i)
-                          (+ 1 j)
-                          s
-                          (subseq msg 1)
-                          result)
-        (reverse result)))
-  {% endhighlight %}
-</section>
+{% highlight cl %}
+(defun output-generator (i j s msg result)
+  (setq i (mod (+ i 1) 256))
+  (setq j (mod (+ j (nth i s)) 256))
+  (setq s (switch (nth i s)
+                  (nth j s) s))
+  (push (boole boole-xor (mod (+ (nth i s)
+                                 (nth j s))
+                              256)
+               (car msg)) result)
+  (if (> (length msg) 1)
+      (output-generator (+ 1 i)
+                        (+ 1 j)
+                        s
+                        (subseq msg 1)
+                        result)
+      (reverse result)))
+{% endhighlight %}
 
 ### Test Run
 Using my Lisp implementation, here are some examples:

@@ -136,18 +136,15 @@ A better example would be to pass undefined functions. If the undefined function
 <section class="shell">
 {% highlight console %}
 CL@USER$ (exp3)
-
-; in: EXP3
-;     (EXP3)
-; 
-; caught STYLE-WARNING:
-;   undefined function: EXP3
-; 
-; compilation unit finished
-;   Undefined function:
-;     EXP3
-;   caught 1 STYLE-WARNING condition
-; Evaluation aborted on #<UNDEFINED-FUNCTION EXP3 {1004F1C1A3}>.
+ in: EXP3
+     (EXP3)
+ caught STYLE-WARNING:
+   undefined function: EXP3
+ compilation unit finished
+   Undefined function:
+     EXP3
+   caught 1 STYLE-WARNING condition
+ Evaluation aborted on #<UNDEFINED-FUNCTION EXP3 {1004F1C1A3}>.
 {% endhighlight %}
 </section>
 
@@ -173,17 +170,15 @@ If we place the undefined function before a valid function:
 {% highlight console %}
 CL@USER$ (or (exp3) (exp2) (exp1))
 
-; in: OR (EXP3)
-;     (EXP3)
-; 
-; caught STYLE-WARNING:
-;   undefined function: EXP3
-; 
-; compilation unit finished
-;   Undefined function:
-;     EXP3
-;   caught 1 STYLE-WARNING condition
-; Evaluation aborted on #<UNDEFINED-FUNCTION EXP3 {100537C653}>.
+ in: OR (EXP3)
+     (EXP3)
+ caught STYLE-WARNING:
+   undefined function: EXP3
+ compilation unit finished
+   Undefined function:
+     EXP3
+   caught 1 STYLE-WARNING condition
+ Evaluation aborted on #<UNDEFINED-FUNCTION EXP3 {100537C653}>.
 {% endhighlight %}
 </section>
 
@@ -291,13 +286,13 @@ So here you can see one possible implementation of the lazy paradigm. The macro 
 
 <section class="shell">
 {% highlight console %}
-CL@USER$ (defun add (x y)
-           (lazy (+ x y)))
-ADD
-CL@USER$ (add 1 2)
-#<CLOSURE (LAMBDA () :IN ADD) {1003F30A4B}>
-CL@USER$ (funcall (add 1 2))
-3
+ CL@USER$ (defun add (x y)
+            (lazy (+ x y)))
+ ADD
+ CL@USER$ (add 1 2)
+ #<CLOSURE (LAMBDA () :IN ADD) {1003F30A4B}>
+ CL@USER$ (funcall (add 1 2))
+ 3
 {% endhighlight %}
 </section>
 

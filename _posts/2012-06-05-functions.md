@@ -4,13 +4,13 @@ title: Functions
 ---
 ### Definition of a Function
 Functions are nothing more than equations where you can plug in an input variable `\(x\)` and get an output variable `\(y\)` in return.
-`\[
+$$
 x \xrightarrow{\text{input}}\boxed{function}\xrightarrow{\text{output}} y
-\]`
+$$
 Functions describe the relations, causalities, and changes between one variable (*the input*) and the next (*the output*). In function notation it is expressed as:
-`\[
+$$
 \Large y = f(x)
-\]`
+$$
 
 ### Examples
 *These examples are taken from [The Manga Guide to Calculus](http://nostarch.com/mg_calculus.htm) (highly recommended)*
@@ -20,60 +20,73 @@ Functions describe the relations, causalities, and changes between one variable 
 The frequency of a cricket's chirp `\(y\)` is determined by temperature `\(x\)` with the function `\(y = 7x-30\)`. 
 Given `\(x\)` is `\(27^\circ C\)`:
 
+<div style="margin-bottom:10px">
 `\(\begin{align}
 y &= 7x - 30 \\
   &= 7(27) - 30 \\
 y &= 159 \mbox{ chirps per minute}
 \end{align}\)` 
+</div>
 
 **An example of Changes**
 
 The speed of sound `\(y\)` in meters per second (`\(m/s\)`) changes in relation to the temperature `\(x^\circ C\)`.
-
+<div>
 `\(\begin{align}
 y &= v(x) \\
   &= 0.6x + 331 
 \end{align}\)`
-
-`\[\begin{array}{lll|lll}
-x & = & 15^\circ C & x & = & -5^\circ C \\
-y & = & v(15) & y & = & v(-5) \\
-& = & 0.6(15) + 331 && = & 0.6(-5) + 331 \\
-& = & 340 \mbox{m/s} && = & 328 \mbox{m/s} \\
-\end{array}\]`
+</div>
+<div>
+$$
+\begin{array}{lll|lll}
+x & = & 15^\circ C & x & = & -5^\circ C\\
+y & = & v(15) & y & = & v(-5)\\
+& = & 0.6(15) + 331 && = & 0.6(-5) + 331\\
+& = & 340 \mbox{m/s} && = & 328 \mbox{m/s}
+\end{array}
+$$
+</div>
 
 **An example of Relations**
 
 Conversion between `\(x^\circ\)` Fahrenheit to `\(y^\circ\)` Celsius.
 
-`\[\begin {array}{lll|lll}
+<div>
+$$
+\begin {array}{lll|lll}
 y & = & f(x) & x & = & 50^\circ F\\
 & = & \frac 5 9 (x - 32) && = &\frac 5 9 (50 - 32) \\
 &&&& = & 10^\circ C 
-\end{array}\]`
+\end{array}
+$$
+</div>
 
 ### As an aside...
 ***Composition of functions*** is the combination of two or more functions.
-
-`\[
+$$
 x \rightarrow \boxed{f} \rightarrow f(x) \rightarrow \boxed{g} \rightarrow g(f(x))
-\]`
-
+$$
 In computer science, functions that can be passed to other functions as input (*arguments*) are called **[first class functions](http://en.wikipedia.org/wiki/First-class_function)**.
 
 ### Graphing Functions
 Graphing functions is quite simple, you plug in any variable `\(x\)` into the function and take the result `\(y\)` and use them as your `\(x, y\)` coordinates.
 
 `\(f(x) = 2x - 1\)`
-`\[\begin{array}{c|c|c}
+
+<div>
+$$
+\begin{array}{c|c|c}
 x & 2x - 1 & (x,y) \\
 \hline
 1 & 1 & (1,1) \\
 2 & 3 & (2,3) \\
 3 & 5 & (3,5)
-\end{array}\]`
+\end{array}
+$$
+</div>
 
-<div id="box" class="jxgbox"></div>
+<div id="box" class="jxgbox center-block" style="height:300px;width:300px"></div>
 <script type="text/javascript">
  var board = JXG.JSXGraph.initBoard('box', {boundingbox: [-6, 6, 6, -6], axis:true});
  var p1 = board.create('point',[1,1], {name: "1,1"});
