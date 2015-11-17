@@ -23,7 +23,11 @@ I am currently based in Osaka, Japan, and when I'm not getting up at 3 AM to do 
   <tbody>
     <tr>
       <td><span class="text-warning">[Common Lisp]</span></td>
-      <td></td>
+      <td><span class="text-warning">[Hunchentoot]</span></td>
+    </tr>
+    <tr>
+      <td><span class="text-warning">[Ruby]</span></td>
+      <td><span class="text-warning">[Sinatra]</span></td>
     </tr>
     <tr>
       <td><span class="text-warning">[Python]</span></td>
@@ -75,9 +79,7 @@ I am currently based in Osaka, Japan, and when I'm not getting up at 3 AM to do 
 
 - [Hacker News](https://news.ycombinator.com/user?id=momo-reina)
 - [Stack Overflow](http://stackoverflow.com/users/355542/momo)
-- [Geeklist](https://geekli.st/paradigmshift)
 - [Github](https://github.com/paradigmshift)
-- [Gitorious](https://gitorious.org/~momo-reina)
 
 You can reach me at <mailto:mozart@mozartreina.com>
 

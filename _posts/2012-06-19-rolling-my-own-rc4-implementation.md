@@ -76,8 +76,8 @@ The function `list-init` initializes a list with the elements 0 to 255, this is 
 *in this particular implementation the computation for **`j`** lacks one step, mod 256*
 
 #### First Iteration
-
-`\[
+<div>
+\[
 \begin{array}{l}
 S = 0, 1, 2, 3 \\
 K = 1, 7, 1, 7  \\
@@ -85,34 +85,41 @@ K = 1, 7, 1, 7  \\
 j = (j + S[i] + K[i]) = 0 + 0 + 1 = 1 \\
 \mbox{Swap } S[i] \mbox{with } S[j] = S = 1, 0, 2, 3 \\
 \end{array}
-\]`
+\]
+</div>
 
 #### Second Iteration
-`\[
+<div>
+\[
 \begin{array}{l}
 (i = 1, j = 1, S = 1, 0, 2, 3) \\
 j = (j + S[i] + K[i]) = (1 + 0 + 7) = 0 \mbox{ mod } 4 \\
 \mbox{Swap } S[i] \mbox{with } S[j] = S = 0, 1, 2, 3 \\
 \end{array}
-\]`  
+\]
+</div>
 
 #### Third Iteration
-`\[
+<div>
+\[
 \begin{array}{l}
 (i = 2, j = 0, S = 0, 1, 2, 3) \\
 j = (j + S[i] + K[i]) = (0 + 2 + 1) = 3 \\
 \mbox{Swap } S[i] \mbox{with } S[j] = S = 0, 1, 3, 2 \\
 \end{array}
-\]`
+\]
+</div>
 
 #### Fourth Iteration
-`\[
+<div>
+\[
 \begin{array}{l}
 (i = 3, j = 3, S = 0, 1, 3, 2) \\
 j = (j + S[i] + K[i]) = (3 + 2 + 7) = 0 \mbox { mod } 4 \\
 \mbox{Swap } S[i] \mbox{with } S[j] = S = 2, 1, 3, 0 \\
 \end{array}
-\]`
+\]
+</div> 
 
 After the key is scrambled it is then used in the **PRGA** subroutine.
 

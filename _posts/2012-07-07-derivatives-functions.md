@@ -5,7 +5,7 @@ title: Derivatives of Functions
 ### Derivatives?
 A derivative of a function, in plainspeak, is the rate of change between points of the function when graphed. For example, for the function `\(f(x) = x^2\)`, when `\(x = 2\)` then `\(y = 4\)`, when `\(x = 4\)` then `\(y = 16\)`. When graphed, you get:
 
-<div id="box" class="jxgbox"></div>
+<div id="box" class="jxgbox center-block" style="width:250px; height:250px"></div>
 <script type="text/javascript">
  var board = JXG.JSXGraph.initBoard('box', {boundingbox: [-2, 20, 10, -2], axis:true});
  var p1 = board.create('point',[2, 4], {name: "2,4"});
@@ -32,7 +32,7 @@ One application is in the calculation of moving bodies. Say an object (maybe a c
 
 *car skidding at point `\((0,0)\)`, predicted line of travel in red*
 
-<div id="box2" class="jxgbox"></div>
+<div id="box2" class="jxgbox center-block" style="width:250px; height:250px"></div>
 <script type="text/javascript">
  var board = JXG.JSXGraph.initBoard('box2', {boundingbox: [-5, 10, 5, -5], axis:true});
  var p1 = board.create('point', [0, 0]);
@@ -62,12 +62,14 @@ This is actually exactly the same as the slope formula presented above. `\(f(x +
 #### Example
 Revisiting the function `\(f(x) = x^2\)` above, we've already shown how to determine the derivative, or slope, when two points are given. Again, the slope will quickly become more and more inaccurate as we go farther and farther from the given `\(x, y\)` coordinates. If we want to find the rate of change at any given point, we will have to use the afore-mentioned formula.
 
+<div>
 `\(f(x) = x^2 \\
 f'(x) = \frac {f(x + e) - f(x)} e \\
 f'(x) = \frac {(x + e)^2 - x^2} e \\
 f'(x) = \frac {x^2 + 2xe + e^2 - x^2} e \\
 f'(x) = 2x + e \\
 \)`
+</div>
 
 Uh oh... now what? How do we handle `\(e\)`? `\(e\)` as you may recall is the difference between one point and the next, but since we're trying to determine the derivative of the *function* and not two points, how do we solve for `\(e\)`? This is where we introduce the concept of **limits**.
 
@@ -75,6 +77,7 @@ Limits are an integral part of Calculus, but there are several types of limits. 
 
 A short example is in order to demonstrate this idea. Say `\(L = 5\)` and `\(C = 10\)` and `\(f(x) = \frac x 2\)`.
 
+<div>
 `\(\mbox{If } x = 5, f(x) = \frac 5 2 = 2.5 \\
 \mbox{If } x = 6, f(x) = \frac 6 2 = 3 \\
 \mbox{If } x = 7, f(x) = \frac 7 2 = 3.5 \\
@@ -82,6 +85,7 @@ A short example is in order to demonstrate this idea. Say `\(L = 5\)` and `\(C =
 \text{and so on...} \\
 \mbox{when } x = C, f(x) = \frac {10} {2} = 5 \\
 \)`
+</div>
 
 So we say that as `\(x\)` approaches the value `\(L\)`, the statement `\(f(x) = L\)` becomes true. The notation for a limit is `\(\lim\limits_{x\rightarrow c}\)`, where `\(x\)` is approaching `\(c\)`. The complete expression of the above example would be:
 
@@ -99,9 +103,11 @@ $$
 
 So going back to our equation:
 
+<div>
 `\(f'(x) = 2x + 0 \\
 f'(x) = 2x
 \)`
+</div>
 
 ### One more?
 Let's do one more example to make sure that we understand how derivatives work. 
@@ -120,6 +126,7 @@ $$
 
 So let's get on with it!
 
+<div>
 `\(\begin{array}{ll}
 f'(x) &= \frac {f(x + e) - f(x)} e \\
 & = \frac {f(4 + e) - f(4)} e \\
@@ -132,16 +139,19 @@ f'(x) &= \frac {f(x + e) - f(x)} e \\
 & = \frac {20} 4 \\
 & = 5
 \end{array}\)`
+</div>
 
 So the derivative is `\(5\)`, now to plug it into the tangent line equation (also called the *[point slope formula](http://en.wikipedia.org/wiki/Linear_equation#Point.E2.80.93slope_form)*):
 
+<div>
 `\(y = 5(x - 4) + 40 \\
 y = 5x + 20 \\
 \)`
+</div>
 
 This is the equation of the line tangent to `\(f(x) = 20\sqrt x\)` at point `\((4,40)\)`. Let's graph the equations so that we can visualize the results better.
 
-<div id="box3" class="jxgbox"></div>
+<div id="box3" class="jxgbox center-block" style="width:250px; height:250px"></div>
 <script type="text/javascript">
  var board = JXG.JSXGraph.initBoard('box3', {boundingbox: [-1, 80, 20, -1], axis:true});
  var p1 = board.create('point', [4, 40], {name:"4,40"});

@@ -26,10 +26,10 @@ Let's do a quick example, just to explain the basic concept. Suppose we want a l
 
 <section class="code">
 {% highlight cl %}
-    (defun under-1000 ()
-      (loop for i from 0 to 999
-            when (or (eq (mod i 3) 0) (eq (mod i 5) 0))
-            collect i))
+(defun under-1000 ()
+  (loop for i from 0 to 999
+        when (or (eq (mod i 3) 0) (eq (mod i 5) 0))
+        collect i))
 {% endhighlight %}
 </section>
 

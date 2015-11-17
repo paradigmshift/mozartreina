@@ -19,7 +19,7 @@ So ASDF2, the latest incarnation of ASDF, will search for systems in the default
 Add this to the file (in this example we will be using my toplevel lisp directory):
 <section class="code">
 {% highlight cl %}
-    (:tree (:home "~/dev/lisp/"))
+(:tree (:home "~/dev/lisp/"))
 {% endhighlight %}
 </section>
 

@@ -13,7 +13,7 @@ So what do these two methods, one an efficient technique to find an element in a
 ### Binary Search in-depth (sort of)
 Let's first present the Binary Search method, a.k.a the Binary Chop. The technique is actually quite simple to execute. Take a list represented as a line, the list contains the elements from 0 to 10:
 
-<div id="box1" class="jxgbox", style="height:5em; width:30em;"></div>
+<div id="box1" class="jxgbox center-block", style="height:5em; width:30em;"></div>
 <script type="text/javascript">
  var board = JXG.JSXGraph.initBoard('box1', {boundingbox: [-1,-1,12,1]});
  var p1 = board.create('point', [0,0], {name:"0 Min"});
@@ -25,7 +25,7 @@ Now let's say that the element we want to find is 4. One way to do this would be
 
 Binary Search solves this problem by "guessing" where the element will be by adding the least variable it could be (in this case 0) and the largest (10), and getting the average. Thus it's first guess would be 5:
 
-<div id="box2" class="jxgbox" style="height:5em; width:30em;"></div>
+<div id="box2" class="jxgbox center-block" style="height:5em; width:30em;"></div>
 <script type="text/javascript">
  var board = JXG.JSXGraph.initBoard('box2', {boundingbox: [-1,-1,12,1]});
  var p1 = board.create('point', [0,0], {name:"0 Min"});
@@ -36,7 +36,7 @@ Binary Search solves this problem by "guessing" where the element will be by add
 
 Now it does a check, is 5 the element it was looking for? Nope. Is 5 greater than the element wanted? Yes. So the largest variable (thus far 10), is changed the guess it just made (we know that 5 is larger than the element wanted, so we keep that as the upper bound, lower bound remains unchanged at 0). The rest of the list is thrown away, our new list looks like this:
 
-<div id="box3" class="jxgbox" style="height:5em; width:30em;"></div>
+<div id="box3" class="jxgbox center-block" style="height:5em; width:30em;"></div>
 <script type="text/javascript">
  var board = JXG.JSXGraph.initBoard('box3', {boundingbox: [-1,-1,12,1]});
  var p1 = board.create('point', [0,0], {name:"0 Min"});
@@ -47,7 +47,7 @@ Now it does a check, is 5 the element it was looking for? Nope. Is 5 greater tha
 Again we add the upper bound and lower bound together and get the average (
 `\((0 + 5)/2\)`), this is the new guess.
 
-<div id="box4" class="jxgbox" style="height:5em; width:30em;"></div>
+<div id="box4" class="jxgbox center-block" style="height:5em; width:30em;"></div>
 <script type="text/javascript">
  var board = JXG.JSXGraph.initBoard('box4', {boundingbox: [-1,-1,12,1]});
  var p1 = board.create('point', [0,0], {name:"0 Min"});
@@ -58,7 +58,7 @@ Again we add the upper bound and lower bound together and get the average (
 
 Again we check, is the guess greater than the value we're looking for? This time's it's a no... so is it less than the value wanted? Yes, 2.5 is less than 4. In this case, the upper bound is changed to 2.5, our previous guess, while the upper bound remains unchanged. This is the new line:
 
-<div id="box5" class="jxgbox" style="height:5em; width:30em;"></div>
+<div id="box5" class="jxgbox center-block" style="height:5em; width:30em;"></div>
 <script type="text/javascript">
  var board = JXG.JSXGraph.initBoard('box5', {boundingbox: [-1,-1,12,1]});
  var p1 = board.create('point', [2.5,0], {name:"2.5 Min"});
@@ -68,7 +68,7 @@ Again we check, is the guess greater than the value we're looking for? This time
 
 Again the upper bound and lower bound are added and averaged to produce our new guess. The average is 3.75:
 
-<div id="box6" class="jxgbox" style="height:5em; width:30em;"></div>
+<div id="box6" class="jxgbox center-block" style="height:5em; width:30em;"></div>
 <script type="text/javascript">
  var board = JXG.JSXGraph.initBoard('box6', {boundingbox: [-1,-1,12,1]});
  var p1 = board.create('point', [2.5,0], {name:"2.5 Min"});
@@ -148,7 +148,7 @@ Well it took more than 9... 4 more to be exact! Nowhere close to 10 times as muc
 
 In it's original form, the Newton-Raphson formula for finding roots is this:
 
-`\[X_1 = X_0 - \frac{f(X_0)}{f'(X_0)}\]`
+$$ X_1 = X_0 - \frac{f(X_0)}{f'(X_0)} $$
 
 This is an interactive formula, where the next value of `\(X_1\)` is found by substituting the present value of `\(X_1\)` into the algorithm as `\(X_0\)`.
 
@@ -375,23 +375,32 @@ If this were the end-all-be-all for the hybrid algorithms involving Newton-Raphs
 There are actually scenarios where the Newton-Raphson formula cannot provide a [clear answer](http://www.damtp.cam.ac.uk/lab/people/sd/lectures/nummeth98/figure4.htm#FF_4). However, this happens when you try to find the root of a **polynomial** or a system of equations.
 
 For example, we implemented Newton-Raphson to look for square roots as follows:
-`\[ \text{guess}_1 = {guess}_0 - \frac{\text{number entered} - \text{guess}^2}{\text{guess}^2} \]`
+
+<div> $$
+\text{guess}_1 = {guess}_0 - \frac{\text{number entered} - \text{guess}^2}{\text{guess}^2}
+$$ </div>
 
 This is quite a simple expression and the derivative is stable, ensuring that the formula converges on a point with ever increasing accuracy.
 
 If however, you try to solve for the root of this particular function with Newton-Raphson:
 
-`\[ f(x) = x^3 - 2x + 2 \]`
+<div> $$
+f(x) = x^3 - 2x + 2
+$$ </div>
 
 Initial guess is `\(0\)`
 
+<div>
 First iteration:
 `\( x_1 = x_0 - \frac{f(x)}{f'(x)} = 0 - \frac{2}{-2} \\
 x_1 = 1\)`
+</div>
 
+<div>
 Second iteration:
 `\( x_2 = 1 - \frac{f(1)}{f'(1)} = 1 - \frac{1}{1} \\
 x_2 = 0\)`
+</div>
 
 Uh oh... we an see exactly where this is going... the points oscillate between 0 and 1.
 
@@ -418,7 +427,9 @@ Iterate
 
 Plugging in `\(-1.5\)` results in `\(1.625\)`, another positive number, so again `\(-1.5\)` replaces `\(-1\)` as the upper limit. On the next iteration, `\(-1.75\)` is the midpoint and yields `\(0.140625\)` when plugged in. Eventually you will end up with `\(-1.769\)`, which, when plugged into the equation:
 
+<div>
 `\[ (-1.769)^3 - 2(-1.769) + 2 = 0.0021 \]`
+</div>
 
 Close enough I think that we can declare `\(-1.769\)` as the root for the polynomial.
 

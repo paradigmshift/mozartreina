@@ -86,7 +86,7 @@ x & 2x - 1 & (x,y) \\
 $$
 </div>
 
-<div id="box" class="jxgbox center-block" style="height:300px;width:300px"></div>
+<div id="box" class="jxgbox center-block" style="height:250px; width:250px" ></div>
 <script type="text/javascript">
  var board = JXG.JSXGraph.initBoard('box', {boundingbox: [-6, 6, 6, -6], axis:true});
  var p1 = board.create('point',[1,1], {name: "1,1"});

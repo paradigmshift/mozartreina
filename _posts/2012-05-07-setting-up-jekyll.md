@@ -62,42 +62,40 @@ Here we're just telling Jekyll to use **rdiscount** as it's markdown implementat
 
 To start, create a basic *default* template page, which will for the basis for future pages, and put it in the **`_layouts`** folder. Mine for example is:
 
-<section class="code">
 {% highlight html %}
 {% raw %}
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <meta charset=utf-8 />
-      <title> {% if page.title %} {{ page.title }} | {% endif %} Mozart Reina </title>
-      <link rel="stylesheet" href="/css/styles.css" type="text/css" />
-      <link rel="stylesheet" href="/css/syntax.css" type="text/css" />
-    </head>
-    <body>
-    
-      <header id="top">
-        <h1> Math, Lisp, and general hackery </h1>
-      </header>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset=utf-8 />
+  <title> {% if page.title %} {{ page.title }} | {% endif %} Mozart Reina </title>
+  <link rel="stylesheet" href="/css/styles.css" type="text/css" />
+  <link rel="stylesheet" href="/css/syntax.css" type="text/css" />
+</head>
+<body>
 
-      <nav role="navigation">
-        <ul>
-          <li><a href="/">Home</a></li>
-          <li><a href="/entries/">Entries</a></li>
-          <li><a href="/about/">About</a></li>
-        </ul>
-      </nav>
-    
-      <div id="main">
-        {{ content }}
-      </div>
-      <footer>
-        <p>@copy; Mozart Reina 2012 | All Rights Reserved. </p>
-      </footer>
-    </body>
-    </html>
+  <header id="top">
+    <h1> Math, Lisp, and general hackery </h1>
+  </header>
+
+  <nav role="navigation">
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/entries/">Entries</a></li>
+      <li><a href="/about/">About</a></li>
+    </ul>
+  </nav>
+
+  <div id="main">
+    {{ content }}
+  </div>
+  <footer>
+    <p>@copy; Mozart Reina 2012 | All Rights Reserved. </p>
+  </footer>
+</body>
+</html>
 {% endraw %}
 {% endhighlight %}
-</section>
 
 You'll notice the non-html tags **`{% raw %} {% if page.title %} {{ page.title }} | {% endif %} {% endraw %}`**, this is part of the **[Liquid](http://liquidmarkup.org/)** templating language that Jekyll incorporates. It's a way of introducing code into your html templates and pages. In this case it's just telling Jekyll that if there is a page title to print it out, followed by a vertical bar.
 
@@ -105,17 +103,11 @@ But how does Jekyll recognize the page title?
 
 Create an *index.html* file in the root directory and put this in:
 
-<section class="code">
-{% highlight html %}
-{% raw %}
----
-layout: default
-title: Hey!
----
-Hey there!
-{% endraw %}
-{% endhighlight %}
-</section>
+    ---
+    layout: default
+    title: Hey!
+    ---
+    Hey there!
 
 The triple dash `---` should be at the beginning of the file, no newlines before or after. Everything between the dashes are **[YAML front matter](https://github.com/mojombo/jekyll/wiki/YAML-Front-Matter)**, basically information that Jekyll processes. In this particular example, we're telling Jekyll to use the default layout (the one you just wrote in the _layouts folder) and that the title is "Hey!". When Jekyll reads this, it will create an html file from your default layout and insert "Hey!" wherever there is a {% raw %}**`{{ page.title }}`** {% endraw %}tag.
 

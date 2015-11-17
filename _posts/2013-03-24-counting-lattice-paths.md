@@ -37,12 +37,15 @@ So the method's premise is counting the all paths that have 1 step and working f
 While it would be possible to come up with an algorithm that would walk all paths with 1 step and from there work out the paths with 2 steps and so forth, there is actually an easier method. I actually came up with this myself after staring at the number of paths in the above 4x4 grid, though I'm sure it must be listed somewhere as a method for counting lattice paths.
 
 If we take a look at the first  northeastern rows in the 4x4 grid, we'll see that the number of paths are as follows:
-
-`\[ \begin{bmatrix} 1 & 1 & 1 & 1 & 1 \\ 1 & 2 & 3 & 4 & 5 \end{bmatrix}\]`
+<div> $$
+\begin{bmatrix} 1 & 1 & 1 & 1 & 1 \\ 1 & 2 & 3 & 4 & 5 \end{bmatrix}
+$$ </div>
 
 If we take the third and fourth rows, we end up with the following matrix:
 
-`\[ \begin{bmatrix} 1 & 1 & 1 & 1 & 1 \\ 1 & 2 & 3 & 4 & 5 \\ 1 & 3 & 6 & 10 & 15 \\ 1 & 4 & 10 & 20 & 35 \\ 1 & 5 & 15 & 35 & 70 \end{bmatrix}\]`
+<div> $$
+\begin{bmatrix} 1 & 1 & 1 & 1 & 1 \\ 1 & 2 & 3 & 4 & 5 \\ 1 & 3 & 6 & 10 & 15 \\ 1 & 4 & 10 & 20 & 35 \\ 1 & 5 & 15 & 35 & 70 \end{bmatrix}
+$$ </div>
 
 You'll note an interesting symmetry where the second row matches the second column, the third row the third column, etc. Yet that didn't really help any in coming up with a theoretical formula for calculating the next row from the preceeding one.
 
@@ -50,31 +53,45 @@ Then I realized that one didn't have to come up with both adjacent points to det
 
 Starting from the first row:
 
-`\[ \begin{bmatrix} 1 & 1 & 1 & 1 & 1 \end{bmatrix}\]`
+<div> $$
+\begin{bmatrix} 1 & 1 & 1 & 1 & 1 \end{bmatrix}
+$$ </div>
 
 Take the second element and multiply it by 2, placing it below the second element:
 
-`\[ \begin{bmatrix} 1 & 1 & 1 & 1 & 1 \\ & 2\end{bmatrix}\]`
+<div> $$
+\begin{bmatrix} 1 & 1 & 1 & 1 & 1 \\ & 2\end{bmatrix}
+$$ </div>
 
 Add that to the next element in the above row (2 + 1):
 
-`\[ \begin{bmatrix} 1 & 1 & 1 & 1 & 1 \\ & 2 & 3\end{bmatrix}\]`
+<div> $$
+\begin{bmatrix} 1 & 1 & 1 & 1 & 1 \\ & 2 & 3\end{bmatrix}
+$$ </div>
 
 And keep going on going:
 
-`\[ \begin{bmatrix} 1 & 1 & 1 & 1 & 1 \\  & 2 & 3 & 4 & 5 \end{bmatrix}\]`
+<div> $$
+\begin{bmatrix} 1 & 1 & 1 & 1 & 1 \\  & 2 & 3 & 4 & 5 \end{bmatrix}
+$$ </div>
 
 Then work on the third row by taking the second element of the second row (3) and repeating the process, 3 * 2 = 6 hence:
 
-`\[ \begin{bmatrix} 1 & 1 & 1 & 1 & 1 \\  & 2 & 3 & 4 & 5 \\ & & 6\end{bmatrix}\]`
+<div> $$
+\begin{bmatrix} 1 & 1 & 1 & 1 & 1 \\  & 2 & 3 & 4 & 5 \\ & & 6\end{bmatrix}
+$$ </div>
 
 Take 6 and add it to the next element in the second row (4):
 
-`\[ \begin{bmatrix} 1 & 1 & 1 & 1 & 1 \\  & 2 & 3 & 4 & 5 \\ & & 6 & 10\end{bmatrix}\]`
+<div> $$
+\begin{bmatrix} 1 & 1 & 1 & 1 & 1 \\  & 2 & 3 & 4 & 5 \\ & & 6 & 10\end{bmatrix}
+$$ </div>
 
 And then take that and add it to the last element in the second row:
 
-`\[ \begin{bmatrix} 1 & 1 & 1 & 1 & 1 \\  & 2 & 3 & 4 & 5 \\ & & 6 & 10 & 15\end{bmatrix}\]`
+<div> $$
+\begin{bmatrix} 1 & 1 & 1 & 1 & 1 \\  & 2 & 3 & 4 & 5 \\ & & 6 & 10 & 15\end{bmatrix}
+$$ </div>
 
 This algorithm allows you determine the number of paths from on edge to the other without actually drawing a diagram and manually counting the paths.
 
@@ -82,32 +99,32 @@ Lisp implementation
 
 <section class=code>
 {% highlight cl %}
-  (defvar *path-count* '())
+(defvar *path-count* '())
 
-  (defun initial-steps (width)
-    (let ((steps '()))
-      (dotimes (i width)
-        (push 1 steps))
-      steps))
+(defun initial-steps (width)
+  (let ((steps '()))
+    (dotimes (i width)
+      (push 1 steps))
+    steps))
 
-  (defun count-next-steps (previous)
-    (if (second previous)
-      (let ((step (* (second previous) 2))
-            (previous-copy (cddr previous))
-            (steps '()))
-        (push step steps)
-        (loop until (null previous-copy)
-           do (progn (incf step (car previous-copy))
-                     (push step steps)
-                     (setf previous-copy (cdr previous-copy))))
-        (reverse steps))
-      previous))
+(defun count-next-steps (previous)
+  (if (second previous)
+    (let ((step (* (second previous) 2))
+          (previous-copy (cddr previous))
+          (steps '()))
+      (push step steps)
+      (loop until (null previous-copy)
+         do (progn (incf step (car previous-copy))
+                   (push step steps)
+                   (setf previous-copy (cdr previous-copy))))
+      (reverse steps))
+    previous))
 
-  (defun count-paths (width)
-    (setf *path-count* '())
-    (push (initial-steps width) *path-count*)
-    (dotimes (i (1- width)) 
-      (push (count-next-steps (car *path-count*)) *path-count*)))
+(defun count-paths (width)
+  (setf *path-count* '())
+  (push (initial-steps width) *path-count*)
+  (dotimes (i (1- width)) 
+    (push (count-next-steps (car *path-count*)) *path-count*)))
 
 {% endhighlight %}
 </section>

@@ -96,9 +96,9 @@ Variables are evaluated in the lexical environment, meaning that you can define 
 
 <section class="code">
 {% highlight cl %}
-    (define-test my-test
-      (dotimes ( i 5)
-        (assert-equal i (my-function i))))
+(define-test my-test
+  (dotimes ( i 5)
+    (assert-equal i (my-function i))))
 {% endhighlight %}
 </section>
 
