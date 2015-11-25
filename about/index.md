@@ -13,7 +13,7 @@ I am currently based in Osaka, Japan, and when I'm not getting up at 3 AM to do 
 <div class="clearfix">
 <!-- Hack to put text below -->
 </div>
-<div class="table-responsive">
+<!-- <div class="table-responsive"> -->
 <table class="table table-striped">
   <caption><p class="bg-primary text-center">Tech Stack</p></caption>
   <col><col>
@@ -45,7 +45,7 @@ I am currently based in Osaka, Japan, and when I'm not getting up at 3 AM to do 
     </tr>  
   </tbody>
 </table>
-</div>
+<!-- </div> -->
 
 <div class="table-responsive">
 <table class="table table-striped">
